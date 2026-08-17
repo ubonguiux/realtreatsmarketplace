@@ -17,6 +17,7 @@ import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as NearbyRouteImport } from './routes/nearby'
+import { Route as SellRouteImport } from './routes/sell'
 import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
@@ -62,6 +63,11 @@ const NearbyRoute = NearbyRouteImport.update({
   path: '/nearby',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SellRoute = SellRouteImport.update({
+  id: '/sell',
+  path: '/sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VendorsRoute = VendorsRouteImport.update({
   id: '/vendors',
   path: '/vendors',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
+  '/sell': typeof SellRoute
   '/vendors': typeof VendorsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
+  '/sell': typeof SellRoute
   '/vendors': typeof VendorsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
+  '/sell': typeof SellRoute
   '/vendors': typeof VendorsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/marketplace'
     | '/nearby'
+    | '/sell'
     | '/vendors'
     | '/orders/$id'
     | '/product/$id'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/marketplace'
     | '/nearby'
+    | '/sell'
     | '/vendors'
     | '/orders/$id'
     | '/product/$id'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/marketplace'
     | '/nearby'
+    | '/sell'
     | '/vendors'
     | '/orders/$id'
     | '/product/$id'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   MarketplaceRoute: typeof MarketplaceRoute
   NearbyRoute: typeof NearbyRoute
+  SellRoute: typeof SellRoute
   VendorsRoute: typeof VendorsRoute
   OrdersIdRoute: typeof OrdersIdRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -244,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NearbyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sell': {
+      id: '/sell'
+      path: '/sell'
+      fullPath: '/sell'
+      preLoaderRoute: typeof SellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vendors': {
       id: '/vendors'
       path: '/vendors'
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   MarketplaceRoute: MarketplaceRoute,
   NearbyRoute: NearbyRoute,
+  SellRoute: SellRoute,
   VendorsRoute: VendorsRoute,
   OrdersIdRoute: OrdersIdRoute,
   ProductIdRoute: ProductIdRoute,
