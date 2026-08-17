@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
+import { Route as NearbyRouteImport } from './routes/nearby'
+import { Route as VendorsRouteImport } from './routes/vendors'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NearbyRoute = NearbyRouteImport.update({
+  id: '/nearby',
+  path: '/nearby',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorsRoute = VendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/categories': typeof CategoriesRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/nearby': typeof NearbyRoute
+  '/vendors': typeof VendorsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/categories': typeof CategoriesRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/nearby': typeof NearbyRoute
+  '/vendors': typeof VendorsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/categories': typeof CategoriesRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/nearby': typeof NearbyRoute
+  '/vendors': typeof VendorsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/auth' | '/categories' | '/marketplace' | '/nearby' | '/vendors'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/auth' | '/categories' | '/marketplace' | '/nearby' | '/vendors'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/categories'
+    | '/marketplace'
+    | '/nearby'
+    | '/vendors'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  CategoriesRoute: typeof CategoriesRoute
+  MarketplaceRoute: typeof MarketplaceRoute
+  NearbyRoute: typeof NearbyRoute
+  VendorsRoute: typeof VendorsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nearby': {
+      id: '/nearby'
+      path: '/nearby'
+      fullPath: '/nearby'
+      preLoaderRoute: typeof NearbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendors': {
+      id: '/vendors'
+      path: '/vendors'
+      fullPath: '/vendors'
+      preLoaderRoute: typeof VendorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  CategoriesRoute: CategoriesRoute,
+  MarketplaceRoute: MarketplaceRoute,
+  NearbyRoute: NearbyRoute,
+  VendorsRoute: VendorsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
