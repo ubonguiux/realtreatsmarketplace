@@ -24,6 +24,9 @@ import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
 import { Route as VendorIndexRouteImport } from './routes/vendor.index'
+import { Route as VendorOrdersRouteImport } from './routes/vendor.orders'
+import { Route as VendorProductsRouteImport } from './routes/vendor.products'
+import { Route as VendorSettingsRouteImport } from './routes/vendor.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -100,6 +103,21 @@ const VendorIndexRoute = VendorIndexRouteImport.update({
   path: '/',
   getParentRoute: () => VendorRoute,
 } as any)
+const VendorOrdersRoute = VendorOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => VendorRoute,
+} as any)
+const VendorProductsRoute = VendorProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => VendorRoute,
+} as any)
+const VendorSettingsRoute = VendorSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => VendorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -116,6 +134,9 @@ export interface FileRoutesByFullPath {
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/vendor/orders': typeof VendorOrdersRoute
+  '/vendor/products': typeof VendorProductsRoute
+  '/vendor/settings': typeof VendorSettingsRoute
   '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRoutesByTo {
@@ -132,6 +153,9 @@ export interface FileRoutesByTo {
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/vendor/orders': typeof VendorOrdersRoute
+  '/vendor/products': typeof VendorProductsRoute
+  '/vendor/settings': typeof VendorSettingsRoute
   '/vendor': typeof VendorIndexRoute
 }
 export interface FileRoutesById {
@@ -150,6 +174,9 @@ export interface FileRoutesById {
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/vendor/orders': typeof VendorOrdersRoute
+  '/vendor/products': typeof VendorProductsRoute
+  '/vendor/settings': typeof VendorSettingsRoute
   '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRouteTypes {
@@ -169,6 +196,9 @@ export interface FileRouteTypes {
     | '/orders/$id'
     | '/product/$id'
     | '/store/$slug'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/settings'
     | '/vendor/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -185,6 +215,9 @@ export interface FileRouteTypes {
     | '/orders/$id'
     | '/product/$id'
     | '/store/$slug'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/settings'
     | '/vendor'
   id:
     | '__root__'
@@ -202,6 +235,9 @@ export interface FileRouteTypes {
     | '/orders/$id'
     | '/product/$id'
     | '/store/$slug'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/settings'
     | '/vendor/'
   fileRoutesById: FileRoutesById
 }
@@ -329,14 +365,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorIndexRouteImport
       parentRoute: typeof VendorRoute
     }
+    '/vendor/orders': {
+      id: '/vendor/orders'
+      path: '/orders'
+      fullPath: '/vendor/orders'
+      preLoaderRoute: typeof VendorOrdersRouteImport
+      parentRoute: typeof VendorRoute
+    }
+    '/vendor/products': {
+      id: '/vendor/products'
+      path: '/products'
+      fullPath: '/vendor/products'
+      preLoaderRoute: typeof VendorProductsRouteImport
+      parentRoute: typeof VendorRoute
+    }
+    '/vendor/settings': {
+      id: '/vendor/settings'
+      path: '/settings'
+      fullPath: '/vendor/settings'
+      preLoaderRoute: typeof VendorSettingsRouteImport
+      parentRoute: typeof VendorRoute
+    }
   }
 }
 
 interface VendorRouteChildren {
+  VendorOrdersRoute: typeof VendorOrdersRoute
+  VendorProductsRoute: typeof VendorProductsRoute
+  VendorSettingsRoute: typeof VendorSettingsRoute
   VendorIndexRoute: typeof VendorIndexRoute
 }
 
 const VendorRouteChildren: VendorRouteChildren = {
+  VendorOrdersRoute: VendorOrdersRoute,
+  VendorProductsRoute: VendorProductsRoute,
+  VendorSettingsRoute: VendorSettingsRoute,
   VendorIndexRoute: VendorIndexRoute,
 }
 
