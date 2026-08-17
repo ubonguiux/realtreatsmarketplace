@@ -18,7 +18,7 @@ function VendorSettings() {
   const { vendor, refresh } = useAuth();
   const queryClient = useQueryClient();
   const [store, setStore] = useState({ name: "", description: "", phone: "", address: "", city: "", state: "", logo_url: "", storefront_image_url: "" });
-  const [settings, setSettings] = useState({ delivery_fee: "0", min_order_value: "0", delivery_available: true, pickup_available: false });
+  const [settings, setSettings] = useState({ delivery_fee: "0", min_order_amount: "0", accepts_delivery: true, auto_accept_orders: false });
 
   const data = useQuery({
     queryKey: ["vendor-settings", vendor?.id],
@@ -49,9 +49,9 @@ function VendorSettings() {
     if (s)
       setSettings({
         delivery_fee: String(s.delivery_fee ?? 0),
-        min_order_value: String(s.min_order_value ?? 0),
-        delivery_available: s.delivery_available ?? true,
-        pickup_available: s.pickup_available ?? false,
+        min_order_amount: String(s.min_order_amount ?? 0),
+        accepts_delivery: s.accepts_delivery ?? true,
+        auto_accept_orders: s.auto_accept_orders ?? false,
       });
   }, [data.data]);
 
@@ -63,9 +63,9 @@ function VendorSettings() {
         {
           vendor_id: vendor!.id,
           delivery_fee: Number(settings.delivery_fee || 0),
-          min_order_value: Number(settings.min_order_value || 0),
-          delivery_available: settings.delivery_available,
-          pickup_available: settings.pickup_available,
+          min_order_amount: Number(settings.min_order_amount || 0),
+          accepts_delivery: settings.accepts_delivery,
+          auto_accept_orders: settings.auto_accept_orders,
         },
         { onConflict: "vendor_id" },
       );
@@ -124,16 +124,16 @@ function VendorSettings() {
           </div>
           <div>
             <Label htmlFor="smin">Minimum order value</Label>
-            <Input id="smin" inputMode="numeric" className="mt-1.5" value={settings.min_order_value} onChange={(e) => setSettings({ ...settings, min_order_value: e.target.value })} />
+            <Input id="smin" inputMode="numeric" className="mt-1.5" value={settings.min_order_amount} onChange={(e) => setSettings({ ...settings, min_order_amount: e.target.value })} />
           </div>
         </div>
         <label className="flex items-center justify-between text-sm">
-          Delivery available
-          <Switch checked={settings.delivery_available} onCheckedChange={(v) => setSettings({ ...settings, delivery_available: v })} />
+          Accepts delivery
+          <Switch checked={settings.accepts_delivery} onCheckedChange={(v) => setSettings({ ...settings, accepts_delivery: v })} />
         </label>
         <label className="flex items-center justify-between text-sm">
-          Pickup available
-          <Switch checked={settings.pickup_available} onCheckedChange={(v) => setSettings({ ...settings, pickup_available: v })} />
+          Auto-accept orders
+          <Switch checked={settings.auto_accept_orders} onCheckedChange={(v) => setSettings({ ...settings, auto_accept_orders: v })} />
         </label>
         <Button onClick={() => save.mutate()} disabled={save.isPending}>
           {save.isPending ? "Saving…" : "Save settings"}

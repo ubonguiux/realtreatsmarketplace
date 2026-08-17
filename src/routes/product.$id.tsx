@@ -37,7 +37,7 @@ function ProductPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*, vendors(id,name,slug,city,state,logo_url,status), categories(name), product_images(image_url,position)")
+        .select("*, vendors(id,name,slug,city,state,logo_url,status), categories!products_category_id_fkey(name), product_images(url,sort_order)")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
@@ -81,7 +81,7 @@ function ProductPage() {
   }
 
   const price = effectivePrice(p as never);
-  const gallery = [p.image_url, ...((p.product_images ?? []) as { image_url: string }[]).map((i) => i.image_url)].filter(
+  const gallery = [p.image_url, ...((p.product_images ?? []) as unknown as { url: string }[]).map((i) => i.url)].filter(
     Boolean,
   ) as string[];
   const outOfStock = (p.stock_quantity ?? 0) <= 0;
@@ -102,7 +102,7 @@ function ProductPage() {
             Marketplace
           </Link>
           <span className="mx-1">/</span>
-          <span>{p.categories?.name ?? "Product"}</span>
+          <span>{(p.categories as { name?: string } | null)?.name ?? "Product"}</span>
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-2">

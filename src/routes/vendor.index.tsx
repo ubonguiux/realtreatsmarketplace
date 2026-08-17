@@ -30,7 +30,7 @@ function VendorOverview() {
       return {
         products: p.length,
         approved: p.filter((x) => x.status === "approved").length,
-        pending: p.filter((x) => x.status === "pending").length,
+        pending: p.filter((x) => x.status === "pending_approval").length,
         lowStock: p.filter((x) => (x.stock_quantity ?? 0) <= 3).length,
         orders: o,
         revenue: o.filter((x) => x.status !== "cancelled").reduce((s, x) => s + Number(x.total ?? 0), 0),

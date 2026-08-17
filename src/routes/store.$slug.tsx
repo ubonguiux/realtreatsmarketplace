@@ -32,7 +32,7 @@ function StorePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("vendors")
-        .select("*, vendor_settings(delivery_fee,min_order_value,pickup_available,delivery_available,opening_hours)")
+        .select("*, vendor_settings(delivery_fee,min_order_amount,accepts_delivery)")
         .eq("slug", slug)
         .eq("status", "approved")
         .maybeSingle();
@@ -76,8 +76,8 @@ function StorePage() {
     );
   }
 
-  const settings = (v as { vendor_settings?: { delivery_fee?: number; pickup_available?: boolean; delivery_available?: boolean }[] })
-    .vendor_settings?.[0];
+  const vs = (v as unknown as { vendor_settings?: { delivery_fee?: number; accepts_delivery?: boolean } | { delivery_fee?: number; accepts_delivery?: boolean }[] | null }).vendor_settings;
+  const settings = Array.isArray(vs) ? vs[0] : vs;
 
   return (
     <SiteShell>
@@ -103,8 +103,7 @@ function StorePage() {
             </p>
           </div>
           <div className="text-right text-xs text-muted-foreground">
-            {settings?.delivery_available ? <p>Delivery available</p> : null}
-            {settings?.pickup_available ? <p>Pickup available</p> : null}
+            {settings?.accepts_delivery ? <p>Delivery available</p> : <p>Pickup only</p>}
           </div>
         </div>
         {v.description ? <p className="mt-4 max-w-3xl text-sm text-muted-foreground">{v.description}</p> : null}
