@@ -10,33 +10,311 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
+import { Route as NearbyRouteImport } from './routes/nearby'
+import { Route as SellRouteImport } from './routes/sell'
+import { Route as VendorRouteImport } from './routes/vendor'
+import { Route as VendorsRouteImport } from './routes/vendors'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
+import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as StoreSlugRouteImport } from './routes/store.$slug'
+import { Route as VendorIndexRouteImport } from './routes/vendor.index'
+import { Route as VendorOrdersRouteImport } from './routes/vendor.orders'
+import { Route as VendorProductsRouteImport } from './routes/vendor.products'
+import { Route as VendorSettingsRouteImport } from './routes/vendor.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NearbyRoute = NearbyRouteImport.update({
+  id: '/nearby',
+  path: '/nearby',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellRoute = SellRouteImport.update({
+  id: '/sell',
+  path: '/sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorRoute = VendorRouteImport.update({
+  id: '/vendor',
+  path: '/vendor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorsRoute = VendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVendorsRoute = AdminVendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const OrdersIdRoute = OrdersIdRouteImport.update({
+  id: '/orders/$id',
+  path: '/orders/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoreSlugRoute = StoreSlugRouteImport.update({
+  id: '/store/$slug',
+  path: '/store/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorIndexRoute = VendorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VendorRoute,
+} as any)
+const VendorOrdersRoute = VendorOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => VendorRoute,
+} as any)
+const VendorProductsRoute = VendorProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => VendorRoute,
+} as any)
+const VendorSettingsRoute = VendorSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => VendorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
+  '/categories': typeof CategoriesRoute
+  '/checkout': typeof CheckoutRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/nearby': typeof NearbyRoute
+  '/sell': typeof SellRoute
+  '/vendor': typeof VendorRouteWithChildren
+  '/vendors': typeof VendorsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/vendors': typeof AdminVendorsRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/product/$id': typeof ProductIdRoute
+  '/store/$slug': typeof StoreSlugRoute
+  '/vendor/orders': typeof VendorOrdersRoute
+  '/vendor/products': typeof VendorProductsRoute
+  '/vendor/settings': typeof VendorSettingsRoute
+  '/admin/': typeof AdminIndexRoute
+  '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
+  '/categories': typeof CategoriesRoute
+  '/checkout': typeof CheckoutRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/nearby': typeof NearbyRoute
+  '/sell': typeof SellRoute
+  '/vendors': typeof VendorsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/vendors': typeof AdminVendorsRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/product/$id': typeof ProductIdRoute
+  '/store/$slug': typeof StoreSlugRoute
+  '/vendor/orders': typeof VendorOrdersRoute
+  '/vendor/products': typeof VendorProductsRoute
+  '/vendor/settings': typeof VendorSettingsRoute
+  '/admin': typeof AdminIndexRoute
+  '/vendor': typeof VendorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
+  '/categories': typeof CategoriesRoute
+  '/checkout': typeof CheckoutRoute
+  '/marketplace': typeof MarketplaceRoute
+  '/nearby': typeof NearbyRoute
+  '/sell': typeof SellRoute
+  '/vendor': typeof VendorRouteWithChildren
+  '/vendors': typeof VendorsRoute
+  '/admin/products': typeof AdminProductsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/vendors': typeof AdminVendorsRoute
+  '/orders/$id': typeof OrdersIdRoute
+  '/product/$id': typeof ProductIdRoute
+  '/store/$slug': typeof StoreSlugRoute
+  '/vendor/orders': typeof VendorOrdersRoute
+  '/vendor/products': typeof VendorProductsRoute
+  '/vendor/settings': typeof VendorSettingsRoute
+  '/admin/': typeof AdminIndexRoute
+  '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/auth'
+    | '/cart'
+    | '/categories'
+    | '/checkout'
+    | '/marketplace'
+    | '/nearby'
+    | '/sell'
+    | '/vendor'
+    | '/vendors'
+    | '/admin/products'
+    | '/admin/settings'
+    | '/admin/vendors'
+    | '/orders/$id'
+    | '/product/$id'
+    | '/store/$slug'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/settings'
+    | '/admin/'
+    | '/vendor/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/account'
+    | '/auth'
+    | '/cart'
+    | '/categories'
+    | '/checkout'
+    | '/marketplace'
+    | '/nearby'
+    | '/sell'
+    | '/vendors'
+    | '/admin/products'
+    | '/admin/settings'
+    | '/admin/vendors'
+    | '/orders/$id'
+    | '/product/$id'
+    | '/store/$slug'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/settings'
+    | '/admin'
+    | '/vendor'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/auth'
+    | '/cart'
+    | '/categories'
+    | '/checkout'
+    | '/marketplace'
+    | '/nearby'
+    | '/sell'
+    | '/vendor'
+    | '/vendors'
+    | '/admin/products'
+    | '/admin/settings'
+    | '/admin/vendors'
+    | '/orders/$id'
+    | '/product/$id'
+    | '/store/$slug'
+    | '/vendor/orders'
+    | '/vendor/products'
+    | '/vendor/settings'
+    | '/admin/'
+    | '/vendor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  CartRoute: typeof CartRoute
+  CategoriesRoute: typeof CategoriesRoute
+  CheckoutRoute: typeof CheckoutRoute
+  MarketplaceRoute: typeof MarketplaceRoute
+  NearbyRoute: typeof NearbyRoute
+  SellRoute: typeof SellRoute
+  VendorRoute: typeof VendorRouteWithChildren
+  VendorsRoute: typeof VendorsRoute
+  OrdersIdRoute: typeof OrdersIdRoute
+  ProductIdRoute: typeof ProductIdRoute
+  StoreSlugRoute: typeof StoreSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +326,212 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nearby': {
+      id: '/nearby'
+      path: '/nearby'
+      fullPath: '/nearby'
+      preLoaderRoute: typeof NearbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sell': {
+      id: '/sell'
+      path: '/sell'
+      fullPath: '/sell'
+      preLoaderRoute: typeof SellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor': {
+      id: '/vendor'
+      path: '/vendor'
+      fullPath: '/vendor'
+      preLoaderRoute: typeof VendorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendors': {
+      id: '/vendors'
+      path: '/vendors'
+      fullPath: '/vendors'
+      preLoaderRoute: typeof VendorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vendors': {
+      id: '/admin/vendors'
+      path: '/vendors'
+      fullPath: '/admin/vendors'
+      preLoaderRoute: typeof AdminVendorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/orders/$id': {
+      id: '/orders/$id'
+      path: '/orders/$id'
+      fullPath: '/orders/$id'
+      preLoaderRoute: typeof OrdersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/store/$slug': {
+      id: '/store/$slug'
+      path: '/store/$slug'
+      fullPath: '/store/$slug'
+      preLoaderRoute: typeof StoreSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/': {
+      id: '/vendor/'
+      path: '/'
+      fullPath: '/vendor/'
+      preLoaderRoute: typeof VendorIndexRouteImport
+      parentRoute: typeof VendorRoute
+    }
+    '/vendor/orders': {
+      id: '/vendor/orders'
+      path: '/orders'
+      fullPath: '/vendor/orders'
+      preLoaderRoute: typeof VendorOrdersRouteImport
+      parentRoute: typeof VendorRoute
+    }
+    '/vendor/products': {
+      id: '/vendor/products'
+      path: '/products'
+      fullPath: '/vendor/products'
+      preLoaderRoute: typeof VendorProductsRouteImport
+      parentRoute: typeof VendorRoute
+    }
+    '/vendor/settings': {
+      id: '/vendor/settings'
+      path: '/settings'
+      fullPath: '/vendor/settings'
+      preLoaderRoute: typeof VendorSettingsRouteImport
+      parentRoute: typeof VendorRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminVendorsRoute: typeof AdminVendorsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminProductsRoute: AdminProductsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminVendorsRoute: AdminVendorsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface VendorRouteChildren {
+  VendorOrdersRoute: typeof VendorOrdersRoute
+  VendorProductsRoute: typeof VendorProductsRoute
+  VendorSettingsRoute: typeof VendorSettingsRoute
+  VendorIndexRoute: typeof VendorIndexRoute
+}
+
+const VendorRouteChildren: VendorRouteChildren = {
+  VendorOrdersRoute: VendorOrdersRoute,
+  VendorProductsRoute: VendorProductsRoute,
+  VendorSettingsRoute: VendorSettingsRoute,
+  VendorIndexRoute: VendorIndexRoute,
+}
+
+const VendorRouteWithChildren =
+  VendorRoute._addFileChildren(VendorRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AuthRoute: AuthRoute,
+  CartRoute: CartRoute,
+  CategoriesRoute: CategoriesRoute,
+  CheckoutRoute: CheckoutRoute,
+  MarketplaceRoute: MarketplaceRoute,
+  NearbyRoute: NearbyRoute,
+  SellRoute: SellRoute,
+  VendorRoute: VendorRouteWithChildren,
+  VendorsRoute: VendorsRoute,
+  OrdersIdRoute: OrdersIdRoute,
+  ProductIdRoute: ProductIdRoute,
+  StoreSlugRoute: StoreSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
