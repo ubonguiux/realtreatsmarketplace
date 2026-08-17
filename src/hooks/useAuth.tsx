@@ -59,8 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     enabled: Boolean(userId),
     queryFn: async () => {
       await supabase.rpc("bootstrap_current_user", {
-        _full_name: (session?.user.user_metadata?.["full_name"] as string) ?? undefined,
-        _phone: undefined,
+        _full_name: (session?.user.user_metadata?.["full_name"] as string) ?? "",
       });
       const [{ data: roles }, { data: vendors }] = await Promise.all([
         supabase.from("user_roles").select("role").eq("user_id", userId!),

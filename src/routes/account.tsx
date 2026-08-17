@@ -51,7 +51,7 @@ function AccountPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id,order_number,status,total,created_at")
+        .select("id,status,total,created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data ?? [];
@@ -114,7 +114,7 @@ function AccountPage() {
                     className="surface flex items-center justify-between gap-3 p-4 transition-colors hover:bg-muted"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold">Order {o.order_number ?? o.id.slice(0, 8)}</p>
+                      <p className="truncate text-sm font-semibold">Order {o.id.slice(0, 8)}</p>
                       <p className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleString()}</p>
                     </div>
                     <Badge variant="secondary">{titleize(o.status)}</Badge>

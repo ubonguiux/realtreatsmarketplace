@@ -34,7 +34,7 @@ function AdminOverview() {
       <PageHeader title="Overview" description="Marketplace health at a glance." />
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard label="Vendors" value={s.vendors.length} hint={`${s.vendors.filter((v) => v.status === "pending").length} pending`} />
-        <StatCard label="Products" value={s.products.length} hint={`${s.products.filter((p) => p.status === "pending").length} awaiting review`} />
+        <StatCard label="Products" value={s.products.length} hint={`${s.products.filter((p) => p.status === "pending_approval").length} awaiting review`} />
         <StatCard label="Orders" value={s.orders.length} />
         <StatCard label="GMV" value={formatMoney(s.orders.reduce((sum, o) => sum + Number(o.total ?? 0), 0))} />
       </div>

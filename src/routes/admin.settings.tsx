@@ -15,7 +15,7 @@ export const Route = createFileRoute("/admin/settings")({ component: AdminSettin
 
 function AdminSettings() {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ name: "", tagline: "", announcement: "", support_email: "", currency: "NGN", dispatch_mode: "manual" });
+  const [form, setForm] = useState({ name: "", tagline: "", announcement: "", support_email: "", default_currency: "NGN", dispatch_mode: "manual" });
 
   const settings = useQuery({
     queryKey: ["admin-settings"],
@@ -33,7 +33,7 @@ function AdminSettings() {
         tagline: s.tagline ?? "",
         announcement: s.announcement ?? "",
         support_email: s.support_email ?? "",
-        currency: s.currency ?? "NGN",
+        default_currency: s.default_currency ?? "NGN",
         dispatch_mode: s.dispatch_mode ?? "manual",
       });
   }, [settings.data]);

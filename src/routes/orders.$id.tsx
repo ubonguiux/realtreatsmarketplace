@@ -78,7 +78,7 @@ function OrderPage() {
         </Link>
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="font-display text-xl font-semibold sm:text-2xl">Order {o.order_number ?? o.id.slice(0, 8)}</h1>
+            <h1 className="font-display text-xl font-semibold sm:text-2xl">Order {o.id.slice(0, 8)}</h1>
             <p className="text-sm text-muted-foreground">Placed {new Date(o.created_at).toLocaleString()}</p>
           </div>
           <Badge>{titleize(o.status)}</Badge>

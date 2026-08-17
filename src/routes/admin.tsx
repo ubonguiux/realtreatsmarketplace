@@ -40,11 +40,17 @@ function AdminLayout() {
             title="Admins only"
             description="You need marketplace administrator access to view this area."
             action={
-              <Button asChild>
-                <Link to={user ? "/" : "/auth"} search={user ? undefined : ({ redirect: "/admin" } as never)}>
-                  {user ? "Back home" : "Sign in"}
-                </Link>
-              </Button>
+              user ? (
+                <Button asChild>
+                  <Link to="/">Back home</Link>
+                </Button>
+              ) : (
+                <Button asChild>
+                  <Link to="/auth" search={{ redirect: "/admin" }}>
+                    Sign in
+                  </Link>
+                </Button>
+              )
             }
           />
         </div>

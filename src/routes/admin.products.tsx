@@ -32,8 +32,8 @@ function AdminProducts() {
   });
 
   const review = useMutation({
-    mutationFn: async ({ id, status, why }: { id: string; status: string; why?: string }) => {
-      const { error } = await supabase.rpc("review_product", { _product_id: id, _status: status as never, _reason: why });
+    mutationFn: async ({ id, status, why }: { id: string; status: string; why?: string | undefined }) => {
+      const { error } = await supabase.rpc("review_product", { _product_id: id, _status: status as never, _reason: why ?? "" });
       if (error) throw error;
     },
     onSuccess: () => {
