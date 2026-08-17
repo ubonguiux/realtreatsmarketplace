@@ -26,7 +26,7 @@ export function DashboardShell({
           {nav.map((item) => (
             <Link
               key={item.to}
-              to={item.to}
+              to={item.to as never}
               activeOptions={{ exact: item.to.split("/").length <= 2 }}
               activeProps={{ className: "bg-primary/10 text-primary" }}
               className={cn(
