@@ -20,7 +20,19 @@ import {
 
 export const Route = createFileRoute("/despatch/")({ component: DespatchJobs });
 
-type Delivery = Record<string, any>;
+type Delivery = {
+  id: string;
+  status: string;
+  fee: number | null;
+  distance_km?: number | null;
+  pickup_address: string | null;
+  pickup_latitude: number | null;
+  pickup_longitude: number | null;
+  delivery_address: string | null;
+  delivery_latitude: number | null;
+  delivery_longitude: number | null;
+  vendors?: { name?: string | null; address?: string | null } | null;
+};
 
 function DeliveryCard({ d, children }: { d: Delivery; children?: React.ReactNode }) {
   return (

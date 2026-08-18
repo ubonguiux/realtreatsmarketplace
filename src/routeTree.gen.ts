@@ -26,6 +26,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
+import { Route as DespatchIndexRouteImport } from './routes/despatch.index'
 import { Route as DespatchApplyRouteImport } from './routes/despatch.apply'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
@@ -120,6 +121,11 @@ const AdminVendorsRoute = AdminVendorsRouteImport.update({
   path: '/vendors',
   getParentRoute: () => AdminRoute,
 } as any)
+const DespatchIndexRoute = DespatchIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DespatchRoute,
+} as any)
 const DespatchApplyRoute = DespatchApplyRouteImport.update({
   id: '/apply',
   path: '/apply',
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/vendor/products': typeof VendorProductsRoute
   '/vendor/settings': typeof VendorSettingsRoute
   '/admin/': typeof AdminIndexRoute
+  '/despatch/': typeof DespatchIndexRoute
   '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRoutesByTo {
@@ -195,7 +202,6 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
-  '/despatch': typeof DespatchRouteWithChildren
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
   '/sell': typeof SellRoute
@@ -211,6 +217,7 @@ export interface FileRoutesByTo {
   '/vendor/products': typeof VendorProductsRoute
   '/vendor/settings': typeof VendorSettingsRoute
   '/admin': typeof AdminIndexRoute
+  '/despatch': typeof DespatchIndexRoute
   '/vendor': typeof VendorIndexRoute
 }
 export interface FileRoutesById {
@@ -239,6 +246,7 @@ export interface FileRoutesById {
   '/vendor/products': typeof VendorProductsRoute
   '/vendor/settings': typeof VendorSettingsRoute
   '/admin/': typeof AdminIndexRoute
+  '/despatch/': typeof DespatchIndexRoute
   '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRouteTypes {
@@ -268,6 +276,7 @@ export interface FileRouteTypes {
     | '/vendor/products'
     | '/vendor/settings'
     | '/admin/'
+    | '/despatch/'
     | '/vendor/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -277,7 +286,6 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/checkout'
-    | '/despatch'
     | '/marketplace'
     | '/nearby'
     | '/sell'
@@ -293,6 +301,7 @@ export interface FileRouteTypes {
     | '/vendor/products'
     | '/vendor/settings'
     | '/admin'
+    | '/despatch'
     | '/vendor'
   id:
     | '__root__'
@@ -320,6 +329,7 @@ export interface FileRouteTypes {
     | '/vendor/products'
     | '/vendor/settings'
     | '/admin/'
+    | '/despatch/'
     | '/vendor/'
   fileRoutesById: FileRoutesById
 }
@@ -463,6 +473,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminVendorsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/despatch/': {
+      id: '/despatch/'
+      path: '/'
+      fullPath: '/despatch/'
+      preLoaderRoute: typeof DespatchIndexRouteImport
+      parentRoute: typeof DespatchRoute
+    }
     '/despatch/apply': {
       id: '/despatch/apply'
       path: '/apply'
@@ -540,10 +557,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface DespatchRouteChildren {
   DespatchApplyRoute: typeof DespatchApplyRoute
+  DespatchIndexRoute: typeof DespatchIndexRoute
 }
 
 const DespatchRouteChildren: DespatchRouteChildren = {
   DespatchApplyRoute: DespatchApplyRoute,
+  DespatchIndexRoute: DespatchIndexRoute,
 }
 
 const DespatchRouteWithChildren = DespatchRoute._addFileChildren(
