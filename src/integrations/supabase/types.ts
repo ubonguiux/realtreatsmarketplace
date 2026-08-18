@@ -1269,7 +1269,7 @@ export type Database = {
       submit_product: { Args: { _product_id: string }; Returns: undefined }
     }
     Enums: {
-      app_role: "super_admin" | "vendor" | "customer"
+      app_role: "super_admin" | "vendor" | "customer" | "despatcher"
       delivery_status:
         | "pending"
         | "requested"
@@ -1280,6 +1280,19 @@ export type Database = {
         | "delivered"
         | "failed"
         | "cancelled"
+        | "awaiting_assignment"
+        | "accepted"
+        | "heading_to_pickup"
+        | "arrived_at_pickup"
+        | "near_destination"
+        | "arrived_at_destination"
+      despatcher_availability:
+        | "offline"
+        | "online"
+        | "assigned"
+        | "on_delivery"
+        | "busy"
+      despatcher_status: "pending" | "approved" | "rejected" | "suspended"
       order_status: "pending" | "processing" | "completed" | "cancelled"
       product_status:
         | "draft"
@@ -1424,7 +1437,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["super_admin", "vendor", "customer"],
+      app_role: ["super_admin", "vendor", "customer", "despatcher"],
       delivery_status: [
         "pending",
         "requested",
@@ -1435,7 +1448,21 @@ export const Constants = {
         "delivered",
         "failed",
         "cancelled",
+        "awaiting_assignment",
+        "accepted",
+        "heading_to_pickup",
+        "arrived_at_pickup",
+        "near_destination",
+        "arrived_at_destination",
       ],
+      despatcher_availability: [
+        "offline",
+        "online",
+        "assigned",
+        "on_delivery",
+        "busy",
+      ],
+      despatcher_status: ["pending", "approved", "rejected", "suspended"],
       order_status: ["pending", "processing", "completed", "cancelled"],
       product_status: [
         "draft",
