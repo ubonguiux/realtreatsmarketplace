@@ -214,15 +214,24 @@ export type Database = {
       }
       deliveries: {
         Row: {
+          accepted_at: string | null
+          assigned_at: string | null
           created_at: string
           customer_id: string
           delivered_at: string | null
           delivery_address: string | null
+          delivery_instructions: string | null
           delivery_latitude: number | null
           delivery_longitude: number | null
+          despatcher_id: string | null
+          despatcher_latitude: number | null
+          despatcher_location_at: string | null
+          despatcher_longitude: number | null
+          distance_km: number | null
           driver_name: string | null
           driver_phone: string | null
           estimated_delivery_at: string | null
+          failure_reason: string | null
           fee: number
           id: string
           order_id: string
@@ -238,15 +247,24 @@ export type Database = {
           vendor_order_id: string
         }
         Insert: {
+          accepted_at?: string | null
+          assigned_at?: string | null
           created_at?: string
           customer_id: string
           delivered_at?: string | null
           delivery_address?: string | null
+          delivery_instructions?: string | null
           delivery_latitude?: number | null
           delivery_longitude?: number | null
+          despatcher_id?: string | null
+          despatcher_latitude?: number | null
+          despatcher_location_at?: string | null
+          despatcher_longitude?: number | null
+          distance_km?: number | null
           driver_name?: string | null
           driver_phone?: string | null
           estimated_delivery_at?: string | null
+          failure_reason?: string | null
           fee?: number
           id?: string
           order_id: string
@@ -262,15 +280,24 @@ export type Database = {
           vendor_order_id: string
         }
         Update: {
+          accepted_at?: string | null
+          assigned_at?: string | null
           created_at?: string
           customer_id?: string
           delivered_at?: string | null
           delivery_address?: string | null
+          delivery_instructions?: string | null
           delivery_latitude?: number | null
           delivery_longitude?: number | null
+          despatcher_id?: string | null
+          despatcher_latitude?: number | null
+          despatcher_location_at?: string | null
+          despatcher_longitude?: number | null
+          distance_km?: number | null
           driver_name?: string | null
           driver_phone?: string | null
           estimated_delivery_at?: string | null
+          failure_reason?: string | null
           fee?: number
           id?: string
           order_id?: string
@@ -286,6 +313,13 @@ export type Database = {
           vendor_order_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "deliveries_despatcher_id_fkey"
+            columns: ["despatcher_id"]
+            isOneToOne: false
+            referencedRelation: "despatchers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "deliveries_order_id_fkey"
             columns: ["order_id"]
@@ -353,6 +387,96 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      despatchers: {
+        Row: {
+          active_deliveries: number
+          address: string | null
+          availability: Database["public"]["Enums"]["despatcher_availability"]
+          business_name: string | null
+          city: string | null
+          completed_deliveries: number
+          country: string
+          created_at: string
+          current_latitude: number | null
+          current_longitude: number | null
+          email: string | null
+          full_name: string
+          id: string
+          id_document_url: string | null
+          latitude: number | null
+          location_updated_at: string | null
+          longitude: number | null
+          phone: string | null
+          rating: number | null
+          rejection_reason: string | null
+          service_radius_km: number
+          state: string | null
+          status: Database["public"]["Enums"]["despatcher_status"]
+          updated_at: string
+          user_id: string
+          vehicle_plate: string | null
+          vehicle_type: string
+        }
+        Insert: {
+          active_deliveries?: number
+          address?: string | null
+          availability?: Database["public"]["Enums"]["despatcher_availability"]
+          business_name?: string | null
+          city?: string | null
+          completed_deliveries?: number
+          country?: string
+          created_at?: string
+          current_latitude?: number | null
+          current_longitude?: number | null
+          email?: string | null
+          full_name: string
+          id?: string
+          id_document_url?: string | null
+          latitude?: number | null
+          location_updated_at?: string | null
+          longitude?: number | null
+          phone?: string | null
+          rating?: number | null
+          rejection_reason?: string | null
+          service_radius_km?: number
+          state?: string | null
+          status?: Database["public"]["Enums"]["despatcher_status"]
+          updated_at?: string
+          user_id: string
+          vehicle_plate?: string | null
+          vehicle_type?: string
+        }
+        Update: {
+          active_deliveries?: number
+          address?: string | null
+          availability?: Database["public"]["Enums"]["despatcher_availability"]
+          business_name?: string | null
+          city?: string | null
+          completed_deliveries?: number
+          country?: string
+          created_at?: string
+          current_latitude?: number | null
+          current_longitude?: number | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          id_document_url?: string | null
+          latitude?: number | null
+          location_updated_at?: string | null
+          longitude?: number | null
+          phone?: string | null
+          rating?: number | null
+          rejection_reason?: string | null
+          service_radius_km?: number
+          state?: string | null
+          status?: Database["public"]["Enums"]["despatcher_status"]
+          updated_at?: string
+          user_id?: string
+          vehicle_plate?: string | null
+          vehicle_type?: string
+        }
+        Relationships: []
       }
       favorites: {
         Row: {
@@ -479,14 +603,20 @@ export type Database = {
           announcement: string | null
           auto_approve_products: boolean
           auto_approve_vendors: boolean
+          auto_assign_deliveries: boolean
           default_city: string | null
           default_country: string | null
           default_currency: string
+          default_radius_km: number
           default_state: string | null
+          delivery_base_fee: number
+          delivery_fee_model: string
+          delivery_fee_per_km: number
           description: string | null
           dispatch_mode: string
           id: boolean
           marketplace_active: boolean
+          max_radius_km: number
           name: string
           support_email: string | null
           support_phone: string | null
@@ -497,14 +627,20 @@ export type Database = {
           announcement?: string | null
           auto_approve_products?: boolean
           auto_approve_vendors?: boolean
+          auto_assign_deliveries?: boolean
           default_city?: string | null
           default_country?: string | null
           default_currency?: string
+          default_radius_km?: number
           default_state?: string | null
+          delivery_base_fee?: number
+          delivery_fee_model?: string
+          delivery_fee_per_km?: number
           description?: string | null
           dispatch_mode?: string
           id?: boolean
           marketplace_active?: boolean
+          max_radius_km?: number
           name?: string
           support_email?: string | null
           support_phone?: string | null
@@ -515,14 +651,20 @@ export type Database = {
           announcement?: string | null
           auto_approve_products?: boolean
           auto_approve_vendors?: boolean
+          auto_assign_deliveries?: boolean
           default_city?: string | null
           default_country?: string | null
           default_currency?: string
+          default_radius_km?: number
           default_state?: string | null
+          delivery_base_fee?: number
+          delivery_fee_model?: string
+          delivery_fee_per_km?: number
           description?: string | null
           dispatch_mode?: string
           id?: boolean
           marketplace_active?: boolean
+          max_radius_km?: number
           name?: string
           support_email?: string | null
           support_phone?: string | null
@@ -1061,6 +1203,7 @@ export type Database = {
           auto_accept_orders: boolean
           currency: string
           delivery_fee: number
+          delivery_radius_km: number
           min_order_amount: number
           updated_at: string
           vendor_id: string
@@ -1070,6 +1213,7 @@ export type Database = {
           auto_accept_orders?: boolean
           currency?: string
           delivery_fee?: number
+          delivery_radius_km?: number
           min_order_amount?: number
           updated_at?: string
           vendor_id: string
@@ -1079,6 +1223,7 @@ export type Database = {
           auto_accept_orders?: boolean
           currency?: string
           delivery_fee?: number
+          delivery_radius_km?: number
           min_order_amount?: number
           updated_at?: string
           vendor_id?: string
@@ -1219,6 +1364,10 @@ export type Database = {
         Returns: undefined
       }
       checkout: { Args: { _address: Json }; Returns: string }
+      distance_km: {
+        Args: { lat1: number; lat2: number; lng1: number; lng2: number }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1236,6 +1385,66 @@ export type Database = {
           _metadata?: Json
         }
         Returns: undefined
+      }
+      my_despatcher_id: { Args: never; Returns: string }
+      nearby_products: {
+        Args: {
+          _category?: string
+          _lat: number
+          _limit?: number
+          _lng: number
+          _offset?: number
+          _q?: string
+          _radius?: number
+          _sort?: string
+        }
+        Returns: {
+          category_id: string
+          city: string
+          created_at: string
+          currency: string
+          discount_price: number
+          distance_km: number
+          id: string
+          image_url: string
+          is_featured: boolean
+          latitude: number
+          longitude: number
+          name: string
+          price: number
+          state: string
+          stock_quantity: number
+          vendor_city: string
+          vendor_id: string
+          vendor_name: string
+          vendor_slug: string
+          vendor_state: string
+        }[]
+      }
+      nearby_vendors: {
+        Args: {
+          _lat: number
+          _limit?: number
+          _lng: number
+          _q?: string
+          _radius?: number
+        }
+        Returns: {
+          business_category: string
+          city: string
+          description: string
+          distance_km: number
+          id: string
+          is_featured: boolean
+          latitude: number
+          logo_url: string
+          longitude: number
+          name: string
+          rating: number
+          slug: string
+          state: string
+          storefront_image_url: string
+        }[]
       }
       notify_user: {
         Args: {
