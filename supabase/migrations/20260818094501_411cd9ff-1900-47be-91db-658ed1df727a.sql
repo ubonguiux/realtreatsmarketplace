@@ -1,0 +1,11 @@
+REVOKE EXECUTE ON FUNCTION public.register_despatcher(jsonb) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.review_despatcher(uuid, public.despatcher_status, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.set_despatcher_availability(public.despatcher_availability) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.update_despatcher_location(double precision, double precision) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.request_delivery(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.claim_delivery(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.accept_delivery(uuid) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.reject_delivery(uuid, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.update_delivery_status(uuid, public.delivery_status, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.cancel_delivery(uuid, text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.my_despatcher_id() FROM anon;
