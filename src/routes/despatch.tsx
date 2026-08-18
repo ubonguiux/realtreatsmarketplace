@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { Bike, History, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { SiteShell } from "@/components/marketplace/SiteShell";
 import { DashboardShell } from "@/components/marketplace/DashboardShell";
 import { EmptyState } from "@/components/marketplace/EmptyState";
@@ -20,11 +20,7 @@ export const Route = createFileRoute("/despatch")({
   component: DespatchLayout,
 });
 
-const NAV = [
-  { to: "/despatch", label: "Jobs", icon: <LayoutDashboard className="h-4 w-4" /> },
-  { to: "/despatch/history", label: "History", icon: <History className="h-4 w-4" /> },
-  { to: "/despatch/profile", label: "Profile", icon: <Bike className="h-4 w-4" /> },
-];
+const NAV = [{ to: "/despatch", label: "Deliveries", icon: <LayoutDashboard className="h-4 w-4" /> }];
 
 function DespatchLayout() {
   const { user, despatcher, loading } = useAuth();

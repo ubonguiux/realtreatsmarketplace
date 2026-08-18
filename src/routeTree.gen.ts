@@ -16,6 +16,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as DespatchRouteImport } from './routes/despatch'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as NearbyRouteImport } from './routes/nearby'
 import { Route as SellRouteImport } from './routes/sell'
@@ -25,6 +26,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
+import { Route as DespatchApplyRouteImport } from './routes/despatch.apply'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
@@ -66,6 +68,11 @@ const CategoriesRoute = CategoriesRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DespatchRoute = DespatchRouteImport.update({
+  id: '/despatch',
+  path: '/despatch',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
@@ -113,6 +120,11 @@ const AdminVendorsRoute = AdminVendorsRouteImport.update({
   path: '/vendors',
   getParentRoute: () => AdminRoute,
 } as any)
+const DespatchApplyRoute = DespatchApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
+  getParentRoute: () => DespatchRoute,
+} as any)
 const OrdersIdRoute = OrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
@@ -157,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/despatch': typeof DespatchRouteWithChildren
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
   '/sell': typeof SellRoute
@@ -165,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/despatch/apply': typeof DespatchApplyRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -181,6 +195,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/despatch': typeof DespatchRouteWithChildren
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
   '/sell': typeof SellRoute
@@ -188,6 +203,7 @@ export interface FileRoutesByTo {
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/despatch/apply': typeof DespatchApplyRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -206,6 +222,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/despatch': typeof DespatchRouteWithChildren
   '/marketplace': typeof MarketplaceRoute
   '/nearby': typeof NearbyRoute
   '/sell': typeof SellRoute
@@ -214,6 +231,7 @@ export interface FileRoutesById {
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/despatch/apply': typeof DespatchApplyRoute
   '/orders/$id': typeof OrdersIdRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -233,6 +251,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/checkout'
+    | '/despatch'
     | '/marketplace'
     | '/nearby'
     | '/sell'
@@ -241,6 +260,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/settings'
     | '/admin/vendors'
+    | '/despatch/apply'
     | '/orders/$id'
     | '/product/$id'
     | '/store/$slug'
@@ -257,6 +277,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/checkout'
+    | '/despatch'
     | '/marketplace'
     | '/nearby'
     | '/sell'
@@ -264,6 +285,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/settings'
     | '/admin/vendors'
+    | '/despatch/apply'
     | '/orders/$id'
     | '/product/$id'
     | '/store/$slug'
@@ -281,6 +303,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/checkout'
+    | '/despatch'
     | '/marketplace'
     | '/nearby'
     | '/sell'
@@ -289,6 +312,7 @@ export interface FileRouteTypes {
     | '/admin/products'
     | '/admin/settings'
     | '/admin/vendors'
+    | '/despatch/apply'
     | '/orders/$id'
     | '/product/$id'
     | '/store/$slug'
@@ -307,6 +331,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CategoriesRoute: typeof CategoriesRoute
   CheckoutRoute: typeof CheckoutRoute
+  DespatchRoute: typeof DespatchRouteWithChildren
   MarketplaceRoute: typeof MarketplaceRoute
   NearbyRoute: typeof NearbyRoute
   SellRoute: typeof SellRoute
@@ -366,6 +391,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/despatch': {
+      id: '/despatch'
+      path: '/despatch'
+      fullPath: '/despatch'
+      preLoaderRoute: typeof DespatchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketplace': {
@@ -430,6 +462,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/vendors'
       preLoaderRoute: typeof AdminVendorsRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/despatch/apply': {
+      id: '/despatch/apply'
+      path: '/apply'
+      fullPath: '/despatch/apply'
+      preLoaderRoute: typeof DespatchApplyRouteImport
+      parentRoute: typeof DespatchRoute
     }
     '/orders/$id': {
       id: '/orders/$id'
@@ -499,6 +538,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface DespatchRouteChildren {
+  DespatchApplyRoute: typeof DespatchApplyRoute
+}
+
+const DespatchRouteChildren: DespatchRouteChildren = {
+  DespatchApplyRoute: DespatchApplyRoute,
+}
+
+const DespatchRouteWithChildren = DespatchRoute._addFileChildren(
+  DespatchRouteChildren,
+)
+
 interface VendorRouteChildren {
   VendorOrdersRoute: typeof VendorOrdersRoute
   VendorProductsRoute: typeof VendorProductsRoute
@@ -524,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CategoriesRoute: CategoriesRoute,
   CheckoutRoute: CheckoutRoute,
+  DespatchRoute: DespatchRouteWithChildren,
   MarketplaceRoute: MarketplaceRoute,
   NearbyRoute: NearbyRoute,
   SellRoute: SellRoute,
