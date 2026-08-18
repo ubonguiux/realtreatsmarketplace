@@ -12,6 +12,14 @@ type Vendor = {
   rejection_reason: string | null;
 };
 
+type Despatcher = {
+  id: string;
+  full_name: string;
+  status: string;
+  availability: string;
+  rejection_reason: string | null;
+};
+
 type AuthValue = {
   user: User | null;
   session: Session | null;
@@ -19,6 +27,7 @@ type AuthValue = {
   roles: string[];
   isAdmin: boolean;
   vendor: Vendor | null;
+  despatcher: Despatcher | null;
   refresh: () => void;
   signOut: () => Promise<void>;
 };
@@ -30,6 +39,7 @@ const AuthContext = createContext<AuthValue>({
   roles: [],
   isAdmin: false,
   vendor: null,
+  despatcher: null,
   refresh: () => {},
   signOut: async () => {},
 });
@@ -61,17 +71,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase.rpc("bootstrap_current_user", {
         _full_name: (session?.user.user_metadata?.["full_name"] as string) ?? "",
       });
-      const [{ data: roles }, { data: vendors }] = await Promise.all([
+      const [{ data: roles }, { data: vendors }, { data: despatchers }] = await Promise.all([
         supabase.from("user_roles").select("role").eq("user_id", userId!),
         supabase
           .from("vendors")
           .select("id,name,slug,status,logo_url,rejection_reason")
           .eq("owner_id", userId!)
           .limit(1),
+        supabase
+          .from("despatchers")
+          .select("id,full_name,status,availability,rejection_reason")
+          .eq("user_id", userId!)
+          .limit(1),
       ]);
       return {
         roles: (roles ?? []).map((r) => r.role as string),
         vendor: (vendors?.[0] as Vendor | undefined) ?? null,
+        despatcher: (despatchers?.[0] as Despatcher | undefined) ?? null,
       };
     },
   });
@@ -84,6 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       roles: data?.roles ?? [],
       isAdmin: (data?.roles ?? []).includes("super_admin"),
       vendor: data?.vendor ?? null,
+      despatcher: data?.despatcher ?? null,
       refresh: () => queryClient.invalidateQueries({ queryKey: ["me"] }),
       signOut: async () => {
         await queryClient.cancelQueries();
