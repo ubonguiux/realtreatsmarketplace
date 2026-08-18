@@ -67,8 +67,8 @@ export async function fetchNearbyProducts(args: {
     _lat: args.point.lat,
     _lng: args.point.lng,
     _radius: args.radius,
-    _q: args.q ?? null,
-    _category: args.category ?? null,
+    _q: args.q ?? undefined,
+    _category: args.category ?? undefined,
     _limit: args.limit ?? 48,
     _offset: args.offset ?? 0,
     _sort: args.sort ?? "distance",
@@ -101,7 +101,7 @@ export async function fetchNearbyVendors(args: { point: GeoPoint; radius: number
     _lat: args.point.lat,
     _lng: args.point.lng,
     _radius: args.radius,
-    _q: args.q ?? null,
+    _q: args.q ?? undefined,
     _limit: args.limit ?? 48,
   });
   if (error) throw error;
