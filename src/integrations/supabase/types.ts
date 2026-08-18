@@ -1359,11 +1359,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_delivery: { Args: { _delivery_id: string }; Returns: undefined }
+      assign_delivery: {
+        Args: { _delivery_id: string; _despatcher_id: string }
+        Returns: undefined
+      }
       bootstrap_current_user: {
         Args: { _full_name?: string; _phone?: string }
         Returns: undefined
       }
+      cancel_delivery: {
+        Args: { _delivery_id: string; _reason?: string }
+        Returns: undefined
+      }
       checkout: { Args: { _address: Json }; Returns: string }
+      claim_delivery: { Args: { _delivery_id: string }; Returns: undefined }
+      delivery_next_states: {
+        Args: { _status: Database["public"]["Enums"]["delivery_status"] }
+        Returns: Database["public"]["Enums"]["delivery_status"][]
+      }
       distance_km: {
         Args: { lat1: number; lat2: number; lng1: number; lng2: number }
         Returns: number
@@ -1458,7 +1472,22 @@ export type Database = {
         Returns: undefined
       }
       owns_cart: { Args: { _cart_id: string }; Returns: boolean }
+      pick_despatcher: { Args: { _lat: number; _lng: number }; Returns: string }
+      register_despatcher: { Args: { _payload: Json }; Returns: string }
       register_vendor: { Args: { _payload: Json }; Returns: string }
+      reject_delivery: {
+        Args: { _delivery_id: string; _reason?: string }
+        Returns: undefined
+      }
+      request_delivery: { Args: { _vendor_order_id: string }; Returns: string }
+      review_despatcher: {
+        Args: {
+          _despatcher_id: string
+          _reason?: string
+          _status: Database["public"]["Enums"]["despatcher_status"]
+        }
+        Returns: undefined
+      }
       review_product: {
         Args: {
           _product_id: string
@@ -1475,7 +1504,25 @@ export type Database = {
         }
         Returns: undefined
       }
+      set_despatcher_availability: {
+        Args: {
+          _availability: Database["public"]["Enums"]["despatcher_availability"]
+        }
+        Returns: undefined
+      }
       submit_product: { Args: { _product_id: string }; Returns: undefined }
+      update_delivery_status: {
+        Args: {
+          _delivery_id: string
+          _note?: string
+          _status: Database["public"]["Enums"]["delivery_status"]
+        }
+        Returns: undefined
+      }
+      update_despatcher_location: {
+        Args: { _lat: number; _lng: number }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "super_admin" | "vendor" | "customer" | "despatcher"
