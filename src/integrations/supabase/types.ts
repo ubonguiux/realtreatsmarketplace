@@ -1360,6 +1360,13 @@ export type Database = {
     }
     Functions: {
       accept_delivery: { Args: { _delivery_id: string }; Returns: undefined }
+      admin_update_despatcher_status: {
+        Args: {
+          p_despatcher_id: string
+          p_status: Database["public"]["Enums"]["despatcher_status"]
+        }
+        Returns: undefined
+      }
       assign_delivery: {
         Args: { _delivery_id: string; _despatcher_id: string }
         Returns: undefined
