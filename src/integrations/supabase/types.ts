@@ -562,6 +562,69 @@ export type Database = {
           },
         ]
       }
+      ledger_entries: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          customer_id: string | null
+          delivery_id: string | null
+          description: string | null
+          despatcher_id: string | null
+          entry_type: string
+          gateway: string | null
+          gateway_reference: string | null
+          id: string
+          metadata: Json
+          order_id: string | null
+          payment_id: string | null
+          payout_id: string | null
+          settlement_id: string | null
+          vendor_id: string | null
+          vendor_order_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          customer_id?: string | null
+          delivery_id?: string | null
+          description?: string | null
+          despatcher_id?: string | null
+          entry_type: string
+          gateway?: string | null
+          gateway_reference?: string | null
+          id?: string
+          metadata?: Json
+          order_id?: string | null
+          payment_id?: string | null
+          payout_id?: string | null
+          settlement_id?: string | null
+          vendor_id?: string | null
+          vendor_order_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          customer_id?: string | null
+          delivery_id?: string | null
+          description?: string | null
+          despatcher_id?: string | null
+          entry_type?: string
+          gateway?: string | null
+          gateway_reference?: string | null
+          id?: string
+          metadata?: Json
+          order_id?: string | null
+          payment_id?: string | null
+          payout_id?: string | null
+          settlement_id?: string | null
+          vendor_id?: string | null
+          vendor_order_id?: string | null
+        }
+        Relationships: []
+      }
       marketplace_branding: {
         Row: {
           facebook_url: string | null
@@ -604,72 +667,108 @@ export type Database = {
           auto_approve_products: boolean
           auto_approve_vendors: boolean
           auto_assign_deliveries: boolean
+          commission_percent: number
+          contact_address: string | null
+          corporate_website_url: string | null
           default_city: string | null
           default_country: string | null
           default_currency: string
+          default_gateway: string
           default_radius_km: number
           default_state: string | null
           delivery_base_fee: number
           delivery_fee_model: string
           delivery_fee_per_km: number
           description: string | null
+          despatcher_share_percent: number
           dispatch_mode: string
+          gateway_fee_bearer: string
+          gateway_fee_cap: number
+          gateway_flat: number
+          gateway_percent: number
           id: boolean
           marketplace_active: boolean
           max_radius_km: number
           name: string
+          require_vendor_subscription: boolean
+          settlement_window_minutes: number
           support_email: string | null
           support_phone: string | null
           tagline: string | null
           updated_at: string
+          whatsapp_numbers: string | null
         }
         Insert: {
           announcement?: string | null
           auto_approve_products?: boolean
           auto_approve_vendors?: boolean
           auto_assign_deliveries?: boolean
+          commission_percent?: number
+          contact_address?: string | null
+          corporate_website_url?: string | null
           default_city?: string | null
           default_country?: string | null
           default_currency?: string
+          default_gateway?: string
           default_radius_km?: number
           default_state?: string | null
           delivery_base_fee?: number
           delivery_fee_model?: string
           delivery_fee_per_km?: number
           description?: string | null
+          despatcher_share_percent?: number
           dispatch_mode?: string
+          gateway_fee_bearer?: string
+          gateway_fee_cap?: number
+          gateway_flat?: number
+          gateway_percent?: number
           id?: boolean
           marketplace_active?: boolean
           max_radius_km?: number
           name?: string
+          require_vendor_subscription?: boolean
+          settlement_window_minutes?: number
           support_email?: string | null
           support_phone?: string | null
           tagline?: string | null
           updated_at?: string
+          whatsapp_numbers?: string | null
         }
         Update: {
           announcement?: string | null
           auto_approve_products?: boolean
           auto_approve_vendors?: boolean
           auto_assign_deliveries?: boolean
+          commission_percent?: number
+          contact_address?: string | null
+          corporate_website_url?: string | null
           default_city?: string | null
           default_country?: string | null
           default_currency?: string
+          default_gateway?: string
           default_radius_km?: number
           default_state?: string | null
           delivery_base_fee?: number
           delivery_fee_model?: string
           delivery_fee_per_km?: number
           description?: string | null
+          despatcher_share_percent?: number
           dispatch_mode?: string
+          gateway_fee_bearer?: string
+          gateway_fee_cap?: number
+          gateway_flat?: number
+          gateway_percent?: number
           id?: boolean
           marketplace_active?: boolean
           max_radius_km?: number
           name?: string
+          require_vendor_subscription?: boolean
+          settlement_window_minutes?: number
           support_email?: string | null
           support_phone?: string | null
           tagline?: string | null
           updated_at?: string
+          whatsapp_numbers?: string | null
         }
         Relationships: []
       }
@@ -839,6 +938,198 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      payment_events: {
+        Row: {
+          created_at: string
+          event_key: string
+          gateway: string
+          id: string
+          payload: Json
+          payment_id: string | null
+          processed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_key: string
+          gateway: string
+          id?: string
+          payload?: Json
+          payment_id?: string | null
+          processed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_key?: string
+          gateway?: string
+          id?: string
+          payload?: Json
+          payment_id?: string | null
+          processed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_events_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          checkout_url: string | null
+          created_at: string
+          currency: string
+          customer_id: string | null
+          failure_reason: string | null
+          gateway: string
+          gateway_fee: number
+          gateway_reference: string | null
+          id: string
+          metadata: Json
+          order_id: string | null
+          purpose: string
+          reference: string
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          vendor_subscription_id: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          amount?: number
+          checkout_url?: string | null
+          created_at?: string
+          currency?: string
+          customer_id?: string | null
+          failure_reason?: string | null
+          gateway?: string
+          gateway_fee?: number
+          gateway_reference?: string | null
+          id?: string
+          metadata?: Json
+          order_id?: string | null
+          purpose?: string
+          reference: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          vendor_subscription_id?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          amount?: number
+          checkout_url?: string | null
+          created_at?: string
+          currency?: string
+          customer_id?: string | null
+          failure_reason?: string | null
+          gateway?: string
+          gateway_fee?: number
+          gateway_reference?: string | null
+          id?: string
+          metadata?: Json
+          order_id?: string | null
+          purpose?: string
+          reference?: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          vendor_subscription_id?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_vendor_subscription_id_fkey"
+            columns: ["vendor_subscription_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payouts: {
+        Row: {
+          amount: number
+          attempts: number
+          created_at: string
+          currency: string
+          despatcher_id: string | null
+          failure_reason: string | null
+          id: string
+          party_type: Database["public"]["Enums"]["payout_party"]
+          processed_at: string | null
+          provider: string | null
+          provider_reference: string | null
+          settlement_id: string
+          status: Database["public"]["Enums"]["payout_status"]
+          updated_at: string
+          vendor_id: string | null
+        }
+        Insert: {
+          amount?: number
+          attempts?: number
+          created_at?: string
+          currency?: string
+          despatcher_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          party_type: Database["public"]["Enums"]["payout_party"]
+          processed_at?: string | null
+          provider?: string | null
+          provider_reference?: string | null
+          settlement_id: string
+          status?: Database["public"]["Enums"]["payout_status"]
+          updated_at?: string
+          vendor_id?: string | null
+        }
+        Update: {
+          amount?: number
+          attempts?: number
+          created_at?: string
+          currency?: string
+          despatcher_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          party_type?: Database["public"]["Enums"]["payout_party"]
+          processed_at?: string | null
+          provider?: string | null
+          provider_reference?: string | null
+          settlement_id?: string
+          status?: Database["public"]["Enums"]["payout_status"]
+          updated_at?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payouts_despatcher_id_fkey"
+            columns: ["despatcher_id"]
+            isOneToOne: false
+            referencedRelation: "despatchers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payouts_settlement_id_fkey"
+            columns: ["settlement_id"]
+            isOneToOne: false
+            referencedRelation: "settlements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payouts_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_approval_requests: {
         Row: {
@@ -1072,6 +1363,187 @@ export type Database = {
         }
         Relationships: []
       }
+      settlements: {
+        Row: {
+          adjustment_amount: number
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          currency: string
+          customer_id: string
+          delivered_at: string | null
+          delivery_amount: number
+          delivery_id: string | null
+          despatcher_allocation: number
+          despatcher_id: string | null
+          gateway_fee: number
+          gross_amount: number
+          hold_reason: string | null
+          id: string
+          locked: boolean
+          order_id: string
+          payment_id: string | null
+          platform_allocation: number
+          platform_commission: number
+          platform_delivery_margin: number
+          product_amount: number
+          ready_at: string | null
+          refund_amount: number
+          status: Database["public"]["Enums"]["settlement_status"]
+          updated_at: string
+          vendor_allocation: number
+          vendor_id: string
+          vendor_order_id: string
+        }
+        Insert: {
+          adjustment_amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          currency?: string
+          customer_id: string
+          delivered_at?: string | null
+          delivery_amount?: number
+          delivery_id?: string | null
+          despatcher_allocation?: number
+          despatcher_id?: string | null
+          gateway_fee?: number
+          gross_amount?: number
+          hold_reason?: string | null
+          id?: string
+          locked?: boolean
+          order_id: string
+          payment_id?: string | null
+          platform_allocation?: number
+          platform_commission?: number
+          platform_delivery_margin?: number
+          product_amount?: number
+          ready_at?: string | null
+          refund_amount?: number
+          status?: Database["public"]["Enums"]["settlement_status"]
+          updated_at?: string
+          vendor_allocation?: number
+          vendor_id: string
+          vendor_order_id: string
+        }
+        Update: {
+          adjustment_amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          currency?: string
+          customer_id?: string
+          delivered_at?: string | null
+          delivery_amount?: number
+          delivery_id?: string | null
+          despatcher_allocation?: number
+          despatcher_id?: string | null
+          gateway_fee?: number
+          gross_amount?: number
+          hold_reason?: string | null
+          id?: string
+          locked?: boolean
+          order_id?: string
+          payment_id?: string | null
+          platform_allocation?: number
+          platform_commission?: number
+          platform_delivery_margin?: number
+          product_amount?: number
+          ready_at?: string | null
+          refund_amount?: number
+          status?: Database["public"]["Enums"]["settlement_status"]
+          updated_at?: string
+          vendor_allocation?: number
+          vendor_id?: string
+          vendor_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "settlements_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlements_despatcher_id_fkey"
+            columns: ["despatcher_id"]
+            isOneToOne: false
+            referencedRelation: "despatchers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlements_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlements_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "settlements_vendor_order_id_fkey"
+            columns: ["vendor_order_id"]
+            isOneToOne: true
+            referencedRelation: "vendor_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_packages: {
+        Row: {
+          created_at: string
+          currency: string
+          duration_days: number
+          features: Json
+          id: string
+          is_active: boolean
+          name: string
+          price: number
+          product_limit: number
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          duration_days?: number
+          features?: Json
+          id?: string
+          is_active?: boolean
+          name: string
+          price?: number
+          product_limit?: number
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          duration_days?: number
+          features?: Json
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number
+          product_limit?: number
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1238,6 +1710,66 @@ export type Database = {
           },
         ]
       }
+      vendor_subscriptions: {
+        Row: {
+          amount: number
+          created_at: string
+          expires_at: string | null
+          id: string
+          package_id: string
+          payment_reference: string | null
+          payment_status: Database["public"]["Enums"]["payment_status"]
+          product_limit: number
+          starts_at: string | null
+          status: Database["public"]["Enums"]["subscription_status"]
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          package_id: string
+          payment_reference?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          product_limit?: number
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          package_id?: string
+          payment_reference?: string | null
+          payment_status?: Database["public"]["Enums"]["payment_status"]
+          product_limit?: number
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_subscriptions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_subscriptions_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendor_users: {
         Row: {
           created_at: string
@@ -1360,6 +1892,17 @@ export type Database = {
     }
     Functions: {
       accept_delivery: { Args: { _delivery_id: string }; Returns: undefined }
+      admin_update_despatcher_status: {
+        Args: {
+          p_despatcher_id: string
+          p_status: Database["public"]["Enums"]["despatcher_status"]
+        }
+        Returns: undefined
+      }
+      approve_settlement: {
+        Args: { _settlement_id: string }
+        Returns: undefined
+      }
       assign_delivery: {
         Args: { _delivery_id: string; _despatcher_id: string }
         Returns: undefined
@@ -1368,12 +1911,27 @@ export type Database = {
         Args: { _full_name?: string; _phone?: string }
         Returns: undefined
       }
+      calc_gateway_fee: { Args: { _amount: number }; Returns: number }
       cancel_delivery: {
         Args: { _delivery_id: string; _reason?: string }
         Returns: undefined
       }
       checkout: { Args: { _address: Json }; Returns: string }
       claim_delivery: { Args: { _delivery_id: string }; Returns: undefined }
+      confirm_payment: {
+        Args: {
+          _gateway_fee?: number
+          _gateway_reference: string
+          _paid_amount: number
+          _payload?: Json
+          _reference: string
+        }
+        Returns: string
+      }
+      create_settlement_for_delivery: {
+        Args: { _delivery_id: string }
+        Returns: string
+      }
       delivery_next_states: {
         Args: { _status: Database["public"]["Enums"]["delivery_status"] }
         Returns: Database["public"]["Enums"]["delivery_status"][]
@@ -1382,12 +1940,49 @@ export type Database = {
         Args: { lat1: number; lat2: number; lng1: number; lng2: number }
         Returns: number
       }
+      fail_payment: {
+        Args: { _reason: string; _reference: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      hold_settlement: {
+        Args: { _reason: string; _settlement_id: string }
+        Returns: undefined
+      }
+      initiate_order_payment: {
+        Args: { _gateway?: string; _order_id: string }
+        Returns: {
+          amount: number
+          checkout_url: string | null
+          created_at: string
+          currency: string
+          customer_id: string | null
+          failure_reason: string | null
+          gateway: string
+          gateway_fee: number
+          gateway_reference: string | null
+          id: string
+          metadata: Json
+          order_id: string | null
+          purpose: string
+          reference: string
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          vendor_subscription_id: string | null
+          verified_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "payments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       is_admin: { Args: never; Returns: boolean }
       is_vendor_member: { Args: { _vendor_id: string }; Returns: boolean }
@@ -1400,6 +1995,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      mature_settlements: { Args: never; Returns: number }
       my_despatcher_id: { Args: never; Returns: string }
       nearby_products: {
         Args: {
@@ -1479,6 +2075,14 @@ export type Database = {
         Args: { _delivery_id: string; _reason?: string }
         Returns: undefined
       }
+      reject_settlement: {
+        Args: { _reason: string; _settlement_id: string }
+        Returns: undefined
+      }
+      release_settlement: {
+        Args: { _settlement_id: string }
+        Returns: undefined
+      }
       request_delivery: { Args: { _vendor_order_id: string }; Returns: string }
       review_despatcher: {
         Args: {
@@ -1511,6 +2115,35 @@ export type Database = {
         Returns: undefined
       }
       submit_product: { Args: { _product_id: string }; Returns: undefined }
+      subscribe_vendor: {
+        Args: { _package_id: string }
+        Returns: {
+          amount: number
+          checkout_url: string | null
+          created_at: string
+          currency: string
+          customer_id: string | null
+          failure_reason: string | null
+          gateway: string
+          gateway_fee: number
+          gateway_reference: string | null
+          id: string
+          metadata: Json
+          order_id: string | null
+          purpose: string
+          reference: string
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          vendor_subscription_id: string | null
+          verified_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "payments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       update_delivery_status: {
         Args: {
           _delivery_id: string
@@ -1523,6 +2156,16 @@ export type Database = {
         Args: { _lat: number; _lng: number }
         Returns: undefined
       }
+      update_payout_status: {
+        Args: {
+          _payout_id: string
+          _reason?: string
+          _reference?: string
+          _status: Database["public"]["Enums"]["payout_status"]
+        }
+        Returns: undefined
+      }
+      vendor_product_limit: { Args: { _vendor_id: string }; Returns: number }
     }
     Enums: {
       app_role: "super_admin" | "vendor" | "customer" | "despatcher"
@@ -1550,6 +2193,23 @@ export type Database = {
         | "busy"
       despatcher_status: "pending" | "approved" | "rejected" | "suspended"
       order_status: "pending" | "processing" | "completed" | "cancelled"
+      payment_status:
+        | "initiated"
+        | "pending"
+        | "successful"
+        | "failed"
+        | "abandoned"
+        | "partially_refunded"
+        | "fully_refunded"
+        | "reversed"
+      payout_party: "vendor" | "despatcher" | "platform"
+      payout_status:
+        | "pending"
+        | "processing"
+        | "successful"
+        | "failed"
+        | "retry_required"
+        | "cancelled"
       product_status:
         | "draft"
         | "pending_approval"
@@ -1557,6 +2217,22 @@ export type Database = {
         | "rejected"
         | "suspended"
         | "out_of_stock"
+      settlement_status:
+        | "pending"
+        | "window"
+        | "ready_for_approval"
+        | "approved"
+        | "processing"
+        | "paid"
+        | "held"
+        | "rejected"
+        | "failed"
+      subscription_status:
+        | "pending"
+        | "active"
+        | "expired"
+        | "cancelled"
+        | "suspended"
       vendor_order_status:
         | "new"
         | "accepted"
@@ -1720,6 +2396,25 @@ export const Constants = {
       ],
       despatcher_status: ["pending", "approved", "rejected", "suspended"],
       order_status: ["pending", "processing", "completed", "cancelled"],
+      payment_status: [
+        "initiated",
+        "pending",
+        "successful",
+        "failed",
+        "abandoned",
+        "partially_refunded",
+        "fully_refunded",
+        "reversed",
+      ],
+      payout_party: ["vendor", "despatcher", "platform"],
+      payout_status: [
+        "pending",
+        "processing",
+        "successful",
+        "failed",
+        "retry_required",
+        "cancelled",
+      ],
       product_status: [
         "draft",
         "pending_approval",
@@ -1727,6 +2422,24 @@ export const Constants = {
         "rejected",
         "suspended",
         "out_of_stock",
+      ],
+      settlement_status: [
+        "pending",
+        "window",
+        "ready_for_approval",
+        "approved",
+        "processing",
+        "paid",
+        "held",
+        "rejected",
+        "failed",
+      ],
+      subscription_status: [
+        "pending",
+        "active",
+        "expired",
+        "cancelled",
+        "suspended",
       ],
       vendor_order_status: [
         "new",
