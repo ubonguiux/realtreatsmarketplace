@@ -35,6 +35,7 @@ import { Route as VendorIndexRouteImport } from './routes/vendor.index'
 import { Route as VendorOrdersRouteImport } from './routes/vendor.orders'
 import { Route as VendorProductsRouteImport } from './routes/vendor.products'
 import { Route as VendorSettingsRouteImport } from './routes/vendor.settings'
+import { Route as ApiPublicPaymentsWebhookGatewayRouteImport } from './routes/api/public/payments.webhook.$gateway'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -166,6 +167,12 @@ const VendorSettingsRoute = VendorSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => VendorRoute,
 } as any)
+const ApiPublicPaymentsWebhookGatewayRoute =
+  ApiPublicPaymentsWebhookGatewayRouteImport.update({
+    id: '/api/public/payments/webhook/$gateway',
+    path: '/api/public/payments/webhook/$gateway',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/despatch/': typeof DespatchIndexRoute
   '/vendor/': typeof VendorIndexRoute
+  '/api/public/payments/webhook/$gateway': typeof ApiPublicPaymentsWebhookGatewayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -219,6 +227,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/despatch': typeof DespatchIndexRoute
   '/vendor': typeof VendorIndexRoute
+  '/api/public/payments/webhook/$gateway': typeof ApiPublicPaymentsWebhookGatewayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -248,6 +257,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/despatch/': typeof DespatchIndexRoute
   '/vendor/': typeof VendorIndexRoute
+  '/api/public/payments/webhook/$gateway': typeof ApiPublicPaymentsWebhookGatewayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/despatch/'
     | '/vendor/'
+    | '/api/public/payments/webhook/$gateway'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/despatch'
     | '/vendor'
+    | '/api/public/payments/webhook/$gateway'
   id:
     | '__root__'
     | '/'
@@ -331,6 +343,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/despatch/'
     | '/vendor/'
+    | '/api/public/payments/webhook/$gateway'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -350,6 +363,7 @@ export interface RootRouteChildren {
   OrdersIdRoute: typeof OrdersIdRoute
   ProductIdRoute: typeof ProductIdRoute
   StoreSlugRoute: typeof StoreSlugRoute
+  ApiPublicPaymentsWebhookGatewayRoute: typeof ApiPublicPaymentsWebhookGatewayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -536,6 +550,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorSettingsRouteImport
       parentRoute: typeof VendorRoute
     }
+    '/api/public/payments/webhook/$gateway': {
+      id: '/api/public/payments/webhook/$gateway'
+      path: '/api/public/payments/webhook/$gateway'
+      fullPath: '/api/public/payments/webhook/$gateway'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookGatewayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -603,6 +624,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersIdRoute: OrdersIdRoute,
   ProductIdRoute: ProductIdRoute,
   StoreSlugRoute: StoreSlugRoute,
+  ApiPublicPaymentsWebhookGatewayRoute: ApiPublicPaymentsWebhookGatewayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
