@@ -29,6 +29,7 @@ import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as DespatchIndexRouteImport } from './routes/despatch.index'
 import { Route as DespatchApplyRouteImport } from './routes/despatch.apply'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as PaymentReferenceRouteImport } from './routes/payment.$reference'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
 import { Route as VendorIndexRouteImport } from './routes/vendor.index'
@@ -137,6 +138,11 @@ const OrdersIdRoute = OrdersIdRouteImport.update({
   path: '/orders/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaymentReferenceRoute = PaymentReferenceRouteImport.update({
+  id: '/payment/$reference',
+  path: '/payment/$reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors': typeof AdminVendorsRoute
   '/despatch/apply': typeof DespatchApplyRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/payment/$reference': typeof PaymentReferenceRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
   '/vendor/orders': typeof VendorOrdersRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/admin/vendors': typeof AdminVendorsRoute
   '/despatch/apply': typeof DespatchApplyRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/payment/$reference': typeof PaymentReferenceRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
   '/vendor/orders': typeof VendorOrdersRoute
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/admin/vendors': typeof AdminVendorsRoute
   '/despatch/apply': typeof DespatchApplyRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/payment/$reference': typeof PaymentReferenceRoute
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
   '/vendor/orders': typeof VendorOrdersRoute
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/admin/vendors'
     | '/despatch/apply'
     | '/orders/$id'
+    | '/payment/$reference'
     | '/product/$id'
     | '/store/$slug'
     | '/vendor/orders'
@@ -306,6 +316,7 @@ export interface FileRouteTypes {
     | '/admin/vendors'
     | '/despatch/apply'
     | '/orders/$id'
+    | '/payment/$reference'
     | '/product/$id'
     | '/store/$slug'
     | '/vendor/orders'
@@ -335,6 +346,7 @@ export interface FileRouteTypes {
     | '/admin/vendors'
     | '/despatch/apply'
     | '/orders/$id'
+    | '/payment/$reference'
     | '/product/$id'
     | '/store/$slug'
     | '/vendor/orders'
@@ -361,6 +373,7 @@ export interface RootRouteChildren {
   VendorRoute: typeof VendorRouteWithChildren
   VendorsRoute: typeof VendorsRoute
   OrdersIdRoute: typeof OrdersIdRoute
+  PaymentReferenceRoute: typeof PaymentReferenceRoute
   ProductIdRoute: typeof ProductIdRoute
   StoreSlugRoute: typeof StoreSlugRoute
   ApiPublicPaymentsWebhookGatewayRoute: typeof ApiPublicPaymentsWebhookGatewayRoute
@@ -508,6 +521,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payment/$reference': {
+      id: '/payment/$reference'
+      path: '/payment/$reference'
+      fullPath: '/payment/$reference'
+      preLoaderRoute: typeof PaymentReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -622,6 +642,7 @@ const rootRouteChildren: RootRouteChildren = {
   VendorRoute: VendorRouteWithChildren,
   VendorsRoute: VendorsRoute,
   OrdersIdRoute: OrdersIdRoute,
+  PaymentReferenceRoute: PaymentReferenceRoute,
   ProductIdRoute: ProductIdRoute,
   StoreSlugRoute: StoreSlugRoute,
   ApiPublicPaymentsWebhookGatewayRoute: ApiPublicPaymentsWebhookGatewayRoute,
