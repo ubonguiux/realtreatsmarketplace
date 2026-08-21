@@ -35,6 +35,7 @@ export function DashboardShell({
             >
               {item.icon}
               {item.label}
+              {item.badge}
             </Link>
           ))}
         </nav>
