@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type NavItem = { to: string; label: string; icon: ReactNode };
+export type NavItem = { to: string; label: string; icon: ReactNode; badge?: ReactNode };
 
 export function DashboardShell({
   title,
@@ -35,6 +35,7 @@ export function DashboardShell({
             >
               {item.icon}
               {item.label}
+              {item.badge}
             </Link>
           ))}
         </nav>

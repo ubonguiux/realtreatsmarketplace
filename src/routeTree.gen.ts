@@ -23,6 +23,7 @@ import { Route as SellRouteImport } from './routes/sell'
 import { Route as VendorRouteImport } from './routes/vendor'
 import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminDespatchersRouteImport } from './routes/admin.despatchers'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
@@ -106,6 +107,11 @@ const VendorsRoute = VendorsRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDespatchersRoute = AdminDespatchersRouteImport.update({
+  id: '/despatchers',
+  path: '/despatchers',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/sell': typeof SellRoute
   '/vendor': typeof VendorRouteWithChildren
   '/vendors': typeof VendorsRoute
+  '/admin/despatchers': typeof AdminDespatchersRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/vendors': typeof AdminVendorsRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/nearby': typeof NearbyRoute
   '/sell': typeof SellRoute
   '/vendors': typeof VendorsRoute
+  '/admin/despatchers': typeof AdminDespatchersRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/vendors': typeof AdminVendorsRoute
@@ -252,6 +260,7 @@ export interface FileRoutesById {
   '/sell': typeof SellRoute
   '/vendor': typeof VendorRouteWithChildren
   '/vendors': typeof VendorsRoute
+  '/admin/despatchers': typeof AdminDespatchersRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/vendors': typeof AdminVendorsRoute
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/vendor'
     | '/vendors'
+    | '/admin/despatchers'
     | '/admin/products'
     | '/admin/settings'
     | '/admin/vendors'
@@ -311,6 +321,7 @@ export interface FileRouteTypes {
     | '/nearby'
     | '/sell'
     | '/vendors'
+    | '/admin/despatchers'
     | '/admin/products'
     | '/admin/settings'
     | '/admin/vendors'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/vendor'
     | '/vendors'
+    | '/admin/despatchers'
     | '/admin/products'
     | '/admin/settings'
     | '/admin/vendors'
@@ -479,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/despatchers': {
+      id: '/admin/despatchers'
+      path: '/despatchers'
+      fullPath: '/admin/despatchers'
+      preLoaderRoute: typeof AdminDespatchersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/products': {
       id: '/admin/products'
       path: '/products'
@@ -581,6 +600,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminDespatchersRoute: typeof AdminDespatchersRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminVendorsRoute: typeof AdminVendorsRoute
@@ -588,6 +608,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminDespatchersRoute: AdminDespatchersRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminVendorsRoute: AdminVendorsRoute,

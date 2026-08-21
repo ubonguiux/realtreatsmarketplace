@@ -1,11 +1,13 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { LayoutDashboard, Package, Settings, Store } from "lucide-react";
+import { Bike, LayoutDashboard, Package, Settings, Store } from "lucide-react";
 import { SiteShell } from "@/components/marketplace/SiteShell";
 import { DashboardShell } from "@/components/marketplace/DashboardShell";
 import { EmptyState } from "@/components/marketplace/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -20,15 +22,38 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const NAV = [
-  { to: "/admin", label: "Overview", icon: <LayoutDashboard className="h-4 w-4" /> },
-  { to: "/admin/vendors", label: "Vendors", icon: <Store className="h-4 w-4" /> },
-  { to: "/admin/products", label: "Products", icon: <Package className="h-4 w-4" /> },
-  { to: "/admin/settings", label: "Settings", icon: <Settings className="h-4 w-4" /> },
-];
-
 function AdminLayout() {
   const { user, isAdmin, loading } = useAuth();
+
+  const pendingDespatchers = useQuery({
+    queryKey: ["admin-despatchers-pending-count"],
+    enabled: Boolean(user && isAdmin),
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("despatchers")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending");
+      if (error) throw error;
+      return count ?? 0;
+    },
+  });
+
+  const nav = [
+    { to: "/admin", label: "Overview", icon: <LayoutDashboard className="h-4 w-4" /> },
+    { to: "/admin/vendors", label: "Vendors", icon: <Store className="h-4 w-4" /> },
+    { to: "/admin/products", label: "Products", icon: <Package className="h-4 w-4" /> },
+    {
+      to: "/admin/despatchers",
+      label: "Despatchers",
+      icon: <Bike className="h-4 w-4" />,
+      badge: pendingDespatchers.data ? (
+        <span className="ml-auto rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+          {pendingDespatchers.data}
+        </span>
+      ) : null,
+    },
+    { to: "/admin/settings", label: "Settings", icon: <Settings className="h-4 w-4" /> },
+  ];
 
   if (loading) return <SiteShell><div className="mx-auto max-w-7xl px-4 py-8"><Skeleton className="h-64 w-full" /></div></SiteShell>;
 
@@ -60,7 +85,7 @@ function AdminLayout() {
 
   return (
     <SiteShell>
-      <DashboardShell title="Admin" subtitle="Marketplace control" nav={NAV}>
+      <DashboardShell title="Admin" subtitle="Marketplace control" nav={nav}>
         <Outlet />
       </DashboardShell>
     </SiteShell>
