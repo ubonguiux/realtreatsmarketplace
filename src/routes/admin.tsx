@@ -1,11 +1,13 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { LayoutDashboard, Package, Settings, Store } from "lucide-react";
+import { Bike, LayoutDashboard, Package, Settings, Store } from "lucide-react";
 import { SiteShell } from "@/components/marketplace/SiteShell";
 import { DashboardShell } from "@/components/marketplace/DashboardShell";
 import { EmptyState } from "@/components/marketplace/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -83,7 +85,7 @@ function AdminLayout() {
 
   return (
     <SiteShell>
-      <DashboardShell title="Admin" subtitle="Marketplace control" nav={NAV}>
+      <DashboardShell title="Admin" subtitle="Marketplace control" nav={nav}>
         <Outlet />
       </DashboardShell>
     </SiteShell>
