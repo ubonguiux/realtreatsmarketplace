@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { Bike, LayoutDashboard, Package, Settings, Store } from "lucide-react";
+import { Bike, LayoutDashboard, Package, Settings, Store, Truck } from "lucide-react";
 import { SiteShell } from "@/components/marketplace/SiteShell";
 import { DashboardShell } from "@/components/marketplace/DashboardShell";
 import { EmptyState } from "@/components/marketplace/EmptyState";
@@ -42,6 +42,7 @@ function AdminLayout() {
     { to: "/admin", label: "Overview", icon: <LayoutDashboard className="h-4 w-4" /> },
     { to: "/admin/vendors", label: "Vendors", icon: <Store className="h-4 w-4" /> },
     { to: "/admin/products", label: "Products", icon: <Package className="h-4 w-4" /> },
+    { to: "/admin/dispatch", label: "Dispatch queue", icon: <Truck className="h-4 w-4" /> },
     {
       to: "/admin/despatchers",
       label: "Despatchers",

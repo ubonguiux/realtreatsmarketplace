@@ -32,12 +32,18 @@ function VendorOrders() {
 
   const setStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      if (status === "ready_for_dispatch") {
+        const { error } = await supabase.rpc("request_delivery", { _vendor_order_id: id });
+        if (error) throw error;
+        return;
+      }
       const { error } = await supabase.from("vendor_orders").update({ status: status as never }).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      toast.success("Order updated");
+    onSuccess: (_d, vars) => {
+      toast.success(vars.status === "ready_for_dispatch" ? "Sent to dispatch queue" : "Order updated");
       queryClient.invalidateQueries({ queryKey: ["vendor-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-dispatch-queue"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
