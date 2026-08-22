@@ -70,9 +70,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Sheet>
 
           <Link to="/" className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Store className="h-5 w-5" />
-            </span>
+            <img src={logoAsset.url} alt={`${name} logo`} className="h-9 w-9 rounded-lg object-contain" />
             <span className="font-display text-base font-semibold leading-tight sm:text-lg">{name}</span>
           </Link>
 
