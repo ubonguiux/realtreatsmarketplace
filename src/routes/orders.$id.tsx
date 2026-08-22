@@ -29,7 +29,7 @@ function OrderPage() {
       const { data, error } = await supabase
         .from("orders")
         .select(
-          "*, vendor_orders(id,status,subtotal,delivery_fee,total,vendors(name,slug)), order_items(id,product_name,quantity,unit_price,line_total,vendor_id), deliveries(id,status,provider,tracking_code,vendor_id)",
+          "*, vendor_orders(id,vendor_id,status,subtotal,delivery_fee,total,vendors(name,slug)), order_items(id,product_name,quantity,unit_price,line_total,vendor_id), deliveries(id,status,provider,tracking_reference,vendor_id,despatchers(full_name,phone))",
         )
         .eq("id", id)
         .maybeSingle();
@@ -123,7 +123,8 @@ function OrderPage() {
                 {delivery ? (
                   <p className="mt-3 text-xs text-muted-foreground">
                     Dispatch: {titleize(delivery.status)} · {titleize(delivery.provider ?? "manual")}
-                    {delivery.tracking_code ? ` · ${delivery.tracking_code}` : ""}
+                    {delivery.despatchers?.full_name ? ` · Despatcher: ${delivery.despatchers.full_name}` : ""}
+                    {delivery.tracking_reference ? ` · ${delivery.tracking_reference}` : ""}
                   </p>
                 ) : null}
               </div>
