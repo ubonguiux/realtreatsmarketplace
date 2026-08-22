@@ -45,7 +45,8 @@ const DELIVERY_SELECT =
   "vendor_orders(status,total,created_at,order_items(id))," +
   "orders(reference,status,contact_phone,delivery_address,delivery_city,delivery_state,created_at)";
 
-type Row = Record<string, any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Row = any;
 
 function AdminDispatch() {
   const [filter, setFilter] = useState("ready");
