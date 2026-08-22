@@ -22,7 +22,9 @@ function VendorOrders() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("vendor_orders")
-        .select("*, order_items(id,product_name,quantity,line_total), orders(delivery_address,delivery_city,delivery_state,contact_phone)")
+        .select(
+          "*, order_items(id,product_name,quantity,line_total), orders(delivery_address,delivery_city,delivery_state,contact_phone), deliveries(id,status,despatchers(full_name,phone))",
+        )
         .eq("vendor_id", vendor!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, Search, ShoppingCart, Store, User2, LayoutDashboard, ShieldCheck, LogOut } from "lucide-react";
+import { Menu, Search, ShoppingCart, User2, LayoutDashboard, ShieldCheck, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart, useSettings } from "@/hooks/useMarketplace";
+import logoAsset from "@/assets/realtreats-logo.png.asset.json";
 
 const NAV = [
   { to: "/marketplace", label: "Marketplace" },
@@ -70,9 +71,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Sheet>
 
           <Link to="/" className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Store className="h-5 w-5" />
-            </span>
+            <img src={logoAsset.url} alt={`${name} logo`} className="h-9 w-9 rounded-lg object-contain" />
             <span className="font-display text-base font-semibold leading-tight sm:text-lg">{name}</span>
           </Link>
 
