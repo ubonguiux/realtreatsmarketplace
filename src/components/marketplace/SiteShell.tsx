@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, Search, ShoppingCart, Store, User2, LayoutDashboard, ShieldCheck, LogOut } from "lucide-react";
+import { Menu, Search, ShoppingCart, User2, LayoutDashboard, ShieldCheck, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart, useSettings } from "@/hooks/useMarketplace";
+import logoAsset from "@/assets/realtreats-logo.png.asset.json";
 
 const NAV = [
   { to: "/marketplace", label: "Marketplace" },
