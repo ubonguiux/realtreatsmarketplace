@@ -94,7 +94,7 @@ function OrderPage() {
 
         <div className="mt-6 space-y-4">
           {vendorOrders.map((vo) => {
-            const voItems = items.filter((i) => i.vendor_id === vo.vendors_id || i.vendor_id === vo.vendor_id);
+            const voItems = items.filter((i) => i.vendor_id === vo.vendor_id);
             const delivery = deliveries.find((d) => d.vendor_id === vo.vendor_id);
             return (
               <div key={vo.id} className="surface p-5">
