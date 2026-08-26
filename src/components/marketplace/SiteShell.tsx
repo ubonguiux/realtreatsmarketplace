@@ -14,7 +14,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart, useSettings } from "@/hooks/useMarketplace";
-import logoAsset from "@/assets/realtreats-logo.png.asset.json";
 
 const NAV = [
   { to: "/marketplace", label: "Marketplace" },
@@ -71,7 +70,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Sheet>
 
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt={`${name} logo`} className="h-9 w-9 rounded-lg object-contain" />
+            <img src="/realtreats-logo.png" alt={`${name} logo`} className="h-9 w-9 rounded-lg object-contain" />
             <span className="font-display text-base font-semibold leading-tight sm:text-lg">{name}</span>
           </Link>
 
