@@ -57,7 +57,11 @@ function VendorOrders() {
         <Skeleton className="h-48 w-full" />
       ) : orders.data?.length ? (
         <div className="space-y-3">
-          {orders.data.map((o: any) => (
+          {orders.data.map((o: any) => {
+            const delivery = (Array.isArray(o.deliveries) ? o.deliveries[0] : o.deliveries) ?? null;
+            const lockedDelivery =
+              delivery && !["cancelled", "failed"].includes(delivery.status) ? delivery : null;
+            return (
             <div key={o.id} className="surface p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -65,6 +69,9 @@ function VendorOrders() {
                   <p className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleString()}</p>
                 </div>
                 <Badge variant="secondary">{titleize(o.status)}</Badge>
+                {lockedDelivery ? (
+                  <Badge variant="outline">Handed over to Dispatch</Badge>
+                ) : (
                 <Select value={o.status} onValueChange={(v) => setStatus.mutate({ id: o.id, status: v })}>
                   <SelectTrigger className="w-44">
                     <SelectValue />
@@ -77,7 +84,19 @@ function VendorOrders() {
                     ))}
                   </SelectContent>
                 </Select>
+                )}
               </div>
+              {lockedDelivery ? (
+                <p className="mt-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
+                  Order handed over to Dispatch · {titleize(lockedDelivery.status)}
+                  {lockedDelivery.despatchers?.full_name
+                    ? ` · ${lockedDelivery.despatchers.full_name}${
+                        lockedDelivery.despatchers.phone ? ` (${lockedDelivery.despatchers.phone})` : ""
+                      }`
+                    : " · awaiting despatcher assignment"}
+                </p>
+              ) : null}
+
               <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
                 {(o.order_items ?? []).map((i: any) => (
                   <li key={i.id}>
