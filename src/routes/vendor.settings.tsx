@@ -11,13 +11,20 @@ import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { LocationField } from "@/components/marketplace/LocationField";
+import { isValidCoords } from "@/lib/geo";
+import { NIGERIAN_STATES } from "@/lib/marketplace";
 
 export const Route = createFileRoute("/vendor/settings")({ component: VendorSettings });
 
 function VendorSettings() {
   const { vendor, refresh } = useAuth();
   const queryClient = useQueryClient();
-  const [store, setStore] = useState({ name: "", description: "", phone: "", address: "", city: "", state: "", logo_url: "", storefront_image_url: "" });
+  const [store, setStore] = useState<{
+    name: string; description: string; phone: string; address: string; city: string; state: string;
+    country: string; logo_url: string; storefront_image_url: string;
+    latitude: number | null; longitude: number | null;
+  }>({ name: "", description: "", phone: "", address: "", city: "", state: "", country: "Nigeria", logo_url: "", storefront_image_url: "", latitude: null, longitude: null });
   const [settings, setSettings] = useState({ delivery_fee: "0", min_order_amount: "0", accepts_delivery: true, auto_accept_orders: false });
 
   const data = useQuery({
@@ -43,6 +50,9 @@ function VendorSettings() {
         address: v.address ?? "",
         city: v.city ?? "",
         state: v.state ?? "",
+        country: v.country ?? "Nigeria",
+        latitude: v.latitude ?? null,
+        longitude: v.longitude ?? null,
         logo_url: v.logo_url ?? "",
         storefront_image_url: v.storefront_image_url ?? "",
       });
@@ -57,6 +67,9 @@ function VendorSettings() {
 
   const save = useMutation({
     mutationFn: async () => {
+      if ((store.latitude != null || store.longitude != null) && !isValidCoords(store.latitude, store.longitude)) {
+        throw new Error("Invalid coordinates. Please re-select your store location.");
+      }
       const { error } = await supabase.from("vendors").update(store).eq("id", vendor!.id);
       if (error) throw error;
       const { error: e2 } = await supabase.from("vendor_settings").upsert(
@@ -107,6 +120,42 @@ function VendorSettings() {
           <Label htmlFor="saddr">Address</Label>
           <Input id="saddr" className="mt-1.5" value={store.address} onChange={(e) => setStore({ ...store, address: e.target.value })} />
         </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="sstate">State</Label>
+            <select
+              id="sstate"
+              className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              value={store.state}
+              onChange={(e) => setStore({ ...store, state: e.target.value })}
+            >
+              <option value="">Select state</option>
+              {NIGERIAN_STATES.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="scountry">Country</Label>
+            <Input id="scountry" className="mt-1.5" value={store.country} onChange={(e) => setStore({ ...store, country: e.target.value })} />
+          </div>
+        </div>
+
+        <LocationField
+          label="Store location"
+          description="Pin your store so customers and despatchers can find you. Your address stays as you typed it."
+          value={{ latitude: store.latitude, longitude: store.longitude, city: store.city, state: store.state }}
+          onChange={(next) =>
+            setStore({
+              ...store,
+              latitude: next.latitude,
+              longitude: next.longitude,
+              city: store.city || (next.city ?? ""),
+              state: store.state || (next.state ?? ""),
+            })
+          }
+        />
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="slogo">Logo URL</Label>
