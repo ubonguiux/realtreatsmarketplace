@@ -111,7 +111,9 @@ function VendorOrders() {
                 </p>
               ) : null}
             </div>
-          ))}
+            );
+          })}
+
         </div>
       ) : (
         <EmptyState title="No orders yet" description="Orders from customers will appear here." />
