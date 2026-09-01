@@ -39,6 +39,15 @@ export const CITY_PRESETS: { city: string; state: string; lat: number; lng: numb
 
 export const RADIUS_OPTIONS = [1, 5, 10, 20, 50];
 
+/** True only when both coordinates are finite and within valid geographic ranges. */
+export function isValidCoords(lat: unknown, lng: unknown): boolean {
+  const la = Number(lat);
+  const ln = Number(lng);
+  if (lat == null || lng == null || lat === "" || lng === "") return false;
+  if (!Number.isFinite(la) || !Number.isFinite(ln)) return false;
+  return la >= -90 && la <= 90 && ln >= -180 && ln <= 180;
+}
+
 export function nearestCity(point: GeoPoint) {
   let best = CITY_PRESETS[0]!;
   let bestD = Number.POSITIVE_INFINITY;
