@@ -188,8 +188,99 @@ function AccountPage() {
         <Tabs defaultValue="orders">
           <TabsList>
             <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="delivery">Delivery</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="delivery" className="mt-5">
+            {addressQuery.isLoading ? (
+              <Skeleton className="h-64 w-full" />
+            ) : (
+              <div className="surface max-w-2xl space-y-4 p-5">
+                <div>
+                  <Label htmlFor="addr">Delivery address</Label>
+                  <Input
+                    id="addr"
+                    className="mt-1.5"
+                    placeholder="Street, landmark"
+                    value={address.address}
+                    onChange={(e) => setAddress({ ...address, address: e.target.value })}
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="addr-city">City</Label>
+                    <Input
+                      id="addr-city"
+                      className="mt-1.5"
+                      value={address.city}
+                      onChange={(e) => setAddress({ ...address, city: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>State</Label>
+                    <Select value={address.state} onValueChange={(v) => setAddress({ ...address, state: v })}>
+                      <SelectTrigger className="mt-1.5">
+                        <SelectValue placeholder="Select state" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {NIGERIAN_STATES.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="addr-recipient">Recipient name</Label>
+                    <Input
+                      id="addr-recipient"
+                      className="mt-1.5"
+                      value={address.recipient_name}
+                      onChange={(e) => setAddress({ ...address, recipient_name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="addr-phone">Contact phone</Label>
+                    <Input
+                      id="addr-phone"
+                      className="mt-1.5"
+                      value={address.phone}
+                      onChange={(e) => setAddress({ ...address, phone: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <LocationField
+                  label="Map location"
+                  description="Pin your delivery point so we can match nearby vendors and guide despatch riders."
+                  value={{
+                    latitude: address.latitude,
+                    longitude: address.longitude,
+                    city: address.city,
+                    state: address.state,
+                  }}
+                  onChange={(next) =>
+                    setAddress((a) => ({
+                      ...a,
+                      latitude: next.latitude,
+                      longitude: next.longitude,
+                      city: a.city || (next.city ?? ""),
+                      state: a.state || (next.state ?? ""),
+                    }))
+                  }
+                />
+
+                <Button onClick={() => saveAddress.mutate()} disabled={saveAddress.isPending}>
+                  {saveAddress.isPending ? "Saving…" : "Save delivery details"}
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+
 
           <TabsContent value="orders" className="mt-5">
             {orders.isLoading ? (
