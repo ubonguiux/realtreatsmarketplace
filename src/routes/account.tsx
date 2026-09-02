@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/marketplace/SiteShell";
 import { EmptyState } from "@/components/marketplace/EmptyState";
+import { LocationField } from "@/components/marketplace/LocationField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { formatMoney, titleize } from "@/lib/marketplace";
+import { formatMoney, titleize, NIGERIAN_STATES } from "@/lib/marketplace";
+import { isValidCoords } from "@/lib/geo";
 import { useAuth } from "@/hooks/useAuth";
+
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -44,6 +48,92 @@ function AccountPage() {
     if (profileQuery.data)
       setProfile({ full_name: profileQuery.data.full_name ?? "", phone: profileQuery.data.phone ?? "" });
   }, [profileQuery.data]);
+
+  const [address, setAddress] = useState({
+    id: null as string | null,
+    label: "Home",
+    recipient_name: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "Nigeria",
+    latitude: null as number | null,
+    longitude: null as number | null,
+  });
+
+  const addressQuery = useQuery({
+    queryKey: ["my-address", user?.id],
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("customer_addresses")
+        .select("*")
+        .eq("user_id", user!.id)
+        .order("is_default", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    const d = addressQuery.data;
+    if (!d) return;
+    setAddress({
+      id: d.id,
+      label: d.label ?? "Home",
+      recipient_name: d.recipient_name ?? "",
+      phone: d.phone ?? "",
+      address: d.address ?? "",
+      city: d.city ?? "",
+      state: d.state ?? "",
+      country: d.country ?? "Nigeria",
+      latitude: d.latitude ?? null,
+      longitude: d.longitude ?? null,
+    });
+  }, [addressQuery.data]);
+
+  const saveAddress = useMutation({
+    mutationFn: async () => {
+      if (!address.address.trim()) throw new Error("Enter your delivery address");
+      if (
+        (address.latitude != null || address.longitude != null) &&
+        !isValidCoords(address.latitude, address.longitude)
+      ) {
+        throw new Error("The selected coordinates are invalid. Pick your location again.");
+      }
+      const payload = {
+        user_id: user!.id,
+        label: address.label.trim() || "Home",
+        recipient_name: address.recipient_name.trim() || null,
+        phone: address.phone.trim() || null,
+        address: address.address.trim(),
+        city: address.city.trim() || null,
+        state: address.state || null,
+        country: address.country.trim() || "Nigeria",
+        latitude: address.latitude,
+        longitude: address.longitude,
+        is_default: true,
+      };
+      if (address.id) {
+        const { error } = await supabase.from("customer_addresses").update(payload).eq("id", address.id);
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase.from("customer_addresses").insert(payload).select("id").single();
+        if (error) throw error;
+        setAddress((a) => ({ ...a, id: data.id }));
+      }
+    },
+    onSuccess: () => {
+      toast.success("Delivery details saved");
+      queryClient.invalidateQueries({ queryKey: ["my-address"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
 
   const orders = useQuery({
     queryKey: ["my-orders", user?.id],
@@ -98,8 +188,99 @@ function AccountPage() {
         <Tabs defaultValue="orders">
           <TabsList>
             <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="delivery">Delivery</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="delivery" className="mt-5">
+            {addressQuery.isLoading ? (
+              <Skeleton className="h-64 w-full" />
+            ) : (
+              <div className="surface max-w-2xl space-y-4 p-5">
+                <div>
+                  <Label htmlFor="addr">Delivery address</Label>
+                  <Input
+                    id="addr"
+                    className="mt-1.5"
+                    placeholder="Street, landmark"
+                    value={address.address}
+                    onChange={(e) => setAddress({ ...address, address: e.target.value })}
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="addr-city">City</Label>
+                    <Input
+                      id="addr-city"
+                      className="mt-1.5"
+                      value={address.city}
+                      onChange={(e) => setAddress({ ...address, city: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>State</Label>
+                    <Select value={address.state} onValueChange={(v) => setAddress({ ...address, state: v })}>
+                      <SelectTrigger className="mt-1.5">
+                        <SelectValue placeholder="Select state" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {NIGERIAN_STATES.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="addr-recipient">Recipient name</Label>
+                    <Input
+                      id="addr-recipient"
+                      className="mt-1.5"
+                      value={address.recipient_name}
+                      onChange={(e) => setAddress({ ...address, recipient_name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="addr-phone">Contact phone</Label>
+                    <Input
+                      id="addr-phone"
+                      className="mt-1.5"
+                      value={address.phone}
+                      onChange={(e) => setAddress({ ...address, phone: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <LocationField
+                  label="Map location"
+                  description="Pin your delivery point so we can match nearby vendors and guide despatch riders."
+                  value={{
+                    latitude: address.latitude,
+                    longitude: address.longitude,
+                    city: address.city,
+                    state: address.state,
+                  }}
+                  onChange={(next) =>
+                    setAddress((a) => ({
+                      ...a,
+                      latitude: next.latitude,
+                      longitude: next.longitude,
+                      city: a.city || (next.city ?? ""),
+                      state: a.state || (next.state ?? ""),
+                    }))
+                  }
+                />
+
+                <Button onClick={() => saveAddress.mutate()} disabled={saveAddress.isPending}>
+                  {saveAddress.isPending ? "Saving…" : "Save delivery details"}
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+
 
           <TabsContent value="orders" className="mt-5">
             {orders.isLoading ? (
