@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Store } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/useAuth";
@@ -89,11 +88,16 @@ function AuthPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-secondary/40 px-4 py-10">
       <Link to="/" className="mb-6 flex items-center gap-2">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <Store className="h-5 w-5" />
-        </span>
+        <img
+          src="/realtreats-logo.png"
+          alt={`${settings?.name ?? "RealTreats Marketplace"} logo`}
+          width={40}
+          height={40}
+          className="h-10 w-10 rounded-lg object-contain"
+        />
         <span className="font-display text-lg font-semibold">{settings?.name ?? "RealTreats Marketplace"}</span>
       </Link>
+
 
       <div className="surface w-full max-w-md p-6">
         {sent ? (

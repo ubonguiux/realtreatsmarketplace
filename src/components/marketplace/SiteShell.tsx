@@ -51,6 +51,16 @@ export function SiteShell({ children }: { children: ReactNode }) {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-72 p-6">
+              <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2">
+                <img
+                  src="/realtreats-logo.png"
+                  alt={`${name} logo`}
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 rounded-lg object-contain"
+                />
+                <span className="font-display text-base font-semibold">{name}</span>
+              </Link>
               <nav className="mt-8 flex flex-col gap-1">
                 {NAV.map((n) => (
                   <Link
@@ -70,9 +80,17 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Sheet>
 
           <Link to="/" className="flex items-center gap-2">
-            <img src="/realtreats-logo.png" alt={`${name} logo`} className="h-9 w-9 rounded-lg object-contain" />
+            <img
+              src="/realtreats-logo.png"
+              alt={`${name} logo`}
+              width={36}
+              height={36}
+              fetchPriority="high"
+              className="h-9 w-9 rounded-lg object-contain"
+            />
             <span className="font-display text-base font-semibold leading-tight sm:text-lg">{name}</span>
           </Link>
+
 
           <form onSubmit={submit} className="ml-4 hidden flex-1 items-center md:flex">
             <div className="relative w-full max-w-xl">
@@ -175,7 +193,18 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <footer className="mt-16 border-t border-border bg-card">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-base font-semibold">{name}</p>
+            <div className="flex items-center gap-2">
+              <img
+                src="/realtreats-logo.png"
+                alt={`${name} logo`}
+                width={32}
+                height={32}
+                loading="lazy"
+                className="h-8 w-8 rounded-md object-contain"
+              />
+              <p className="font-display text-base font-semibold">{name}</p>
+            </div>
+
             <p className="mt-2 text-sm text-muted-foreground">
               {settings?.tagline ?? "Discover great products from trusted local vendors."}
             </p>
