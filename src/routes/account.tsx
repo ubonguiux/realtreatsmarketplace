@@ -49,6 +49,92 @@ function AccountPage() {
       setProfile({ full_name: profileQuery.data.full_name ?? "", phone: profileQuery.data.phone ?? "" });
   }, [profileQuery.data]);
 
+  const [address, setAddress] = useState({
+    id: null as string | null,
+    label: "Home",
+    recipient_name: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "Nigeria",
+    latitude: null as number | null,
+    longitude: null as number | null,
+  });
+
+  const addressQuery = useQuery({
+    queryKey: ["my-address", user?.id],
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("customer_addresses")
+        .select("*")
+        .eq("user_id", user!.id)
+        .order("is_default", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    const d = addressQuery.data;
+    if (!d) return;
+    setAddress({
+      id: d.id,
+      label: d.label ?? "Home",
+      recipient_name: d.recipient_name ?? "",
+      phone: d.phone ?? "",
+      address: d.address ?? "",
+      city: d.city ?? "",
+      state: d.state ?? "",
+      country: d.country ?? "Nigeria",
+      latitude: d.latitude ?? null,
+      longitude: d.longitude ?? null,
+    });
+  }, [addressQuery.data]);
+
+  const saveAddress = useMutation({
+    mutationFn: async () => {
+      if (!address.address.trim()) throw new Error("Enter your delivery address");
+      if (
+        (address.latitude != null || address.longitude != null) &&
+        !isValidCoords(address.latitude, address.longitude)
+      ) {
+        throw new Error("The selected coordinates are invalid. Pick your location again.");
+      }
+      const payload = {
+        user_id: user!.id,
+        label: address.label.trim() || "Home",
+        recipient_name: address.recipient_name.trim() || null,
+        phone: address.phone.trim() || null,
+        address: address.address.trim(),
+        city: address.city.trim() || null,
+        state: address.state || null,
+        country: address.country.trim() || "Nigeria",
+        latitude: address.latitude,
+        longitude: address.longitude,
+        is_default: true,
+      };
+      if (address.id) {
+        const { error } = await supabase.from("customer_addresses").update(payload).eq("id", address.id);
+        if (error) throw error;
+      } else {
+        const { data, error } = await supabase.from("customer_addresses").insert(payload).select("id").single();
+        if (error) throw error;
+        setAddress((a) => ({ ...a, id: data.id }));
+      }
+    },
+    onSuccess: () => {
+      toast.success("Delivery details saved");
+      queryClient.invalidateQueries({ queryKey: ["my-address"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
+
   const orders = useQuery({
     queryKey: ["my-orders", user?.id],
     enabled: Boolean(user),
