@@ -37,7 +37,7 @@ export const CITY_PRESETS: { city: string; state: string; lat: number; lng: numb
   { city: "Maiduguri", state: "Borno", lat: 11.8333, lng: 13.15 },
 ];
 
-export const RADIUS_OPTIONS = [1, 5, 10, 20, 50];
+export const RADIUS_OPTIONS = [1, 5, 10, 25, 50];
 
 /** True only when both coordinates are finite and within valid geographic ranges. */
 export function isValidCoords(lat: unknown, lng: unknown): boolean {
@@ -131,4 +131,55 @@ export function staticMapEmbed(points: { lat: number; lng: number }[]) {
   const bbox = [first.lng - delta, first.lat - delta, first.lng + delta, first.lat + delta].join(",");
   const markers = points.map((p) => `${p.lat},${p.lng}`).join("&marker=");
   return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${markers}`;
+}
+
+/** Human readable distance: "850 m away" / "1.2 km away". Null-safe. */
+export function formatDistance(km: number | null | undefined): string | null {
+  if (km == null || !Number.isFinite(Number(km))) return null;
+  const value = Number(km);
+  if (value < 1) return `${Math.max(10, Math.round((value * 1000) / 10) * 10)} m away`;
+  return `${value.toFixed(1).replace(/\.0$/, "")} km away`;
+}
+
+export type NearbyVendor = {
+  id: string;
+  name: string;
+  slug: string;
+  city: string | null;
+  state: string | null;
+  business_category: string | null;
+  logo_url: string | null;
+  storefront_image_url: string | null;
+  is_featured: boolean;
+  latitude: number | null;
+  longitude: number | null;
+  description: string | null;
+  rating: number | null;
+  distanceKm: number | null;
+};
+
+/** Nearby vendors mapped to the shape VendorCard expects. */
+export async function fetchNearbyVendorCards(args: {
+  point: GeoPoint;
+  radius: number;
+  q?: string | undefined;
+  limit?: number | undefined;
+}): Promise<NearbyVendor[]> {
+  const rows = await fetchNearbyVendors(args);
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    slug: r.slug,
+    city: (r["city"] as string) ?? null,
+    state: (r["state"] as string) ?? null,
+    business_category: (r["business_category"] as string) ?? null,
+    logo_url: (r["logo_url"] as string) ?? null,
+    storefront_image_url: (r["storefront_image_url"] as string) ?? null,
+    is_featured: Boolean(r["is_featured"]),
+    latitude: r["latitude"] == null ? null : Number(r["latitude"]),
+    longitude: r["longitude"] == null ? null : Number(r["longitude"]),
+    description: (r["description"] as string) ?? null,
+    rating: r["rating"] == null ? null : Number(r["rating"]),
+    distanceKm: r.distance_km == null ? null : Number(r.distance_km),
+  }));
 }
