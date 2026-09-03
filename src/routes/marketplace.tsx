@@ -86,9 +86,8 @@ function MarketplacePage() {
 
   const loading = nearbyMode ? nearby.isLoading : products.isLoading;
 
-  let items = nearbyMode
+  const items: any[] = nearbyMode
     ? (nearby.data ?? [])
-        .filter((p) => (search.state ? true : true))
         .filter((p) => (minPrice ? Number(p.discount_price || p.price) >= Number(minPrice) : true))
         .filter((p) => (maxPrice ? Number(p.discount_price || p.price) <= Number(maxPrice) : true))
         .filter((p) => (inStock ? p.stock_quantity > 0 : true))
