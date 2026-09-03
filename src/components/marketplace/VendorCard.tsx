@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, BadgeCheck } from "lucide-react";
 import { StoredImage } from "./StoredImage";
+import { formatDistance } from "@/lib/geo";
 
 export type VendorCardData = {
   id: string;
