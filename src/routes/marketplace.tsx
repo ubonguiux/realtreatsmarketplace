@@ -10,7 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { fetchProducts } from "@/lib/queries";
-import { useCart, useCategories, useUserLocation } from "@/hooks/useMarketplace";
+import { LocationPicker } from "@/components/marketplace/LocationPicker";
+import { EmptyState } from "@/components/marketplace/EmptyState";
+import { useCart, useCategories } from "@/hooks/useMarketplace";
+import { useLocationContext } from "@/hooks/useLocationContext";
+import { fetchNearbyProducts } from "@/lib/geo";
 import { NIGERIAN_STATES, haversineKm } from "@/lib/marketplace";
 
 type Search = { q?: string | undefined; category?: string | undefined; state?: string | undefined; distance?: number | undefined };
@@ -37,18 +41,22 @@ function MarketplacePage() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const { data: categories = [] } = useCategories();
-  const { data: location } = useUserLocation();
+  const { location } = useLocationContext();
+  const point = location ? { lat: location.lat, lng: location.lng } : null;
   const { addItem } = useCart();
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [inStock, setInStock] = useState(false);
-  const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
+  const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc" | "distance">("newest");
   const [distance, setDistance] = useState<string>(search.distance ? String(search.distance) : "any");
   const [showFilters, setShowFilters] = useState(false);
 
+  const nearbyMode = Boolean(point) && (distance !== "any" || sort === "distance");
+
   const products = useQuery({
     queryKey: ["products", search, minPrice, maxPrice, inStock, sort],
+    enabled: !nearbyMode,
     queryFn: () =>
       fetchProducts({
         q: search.q,
@@ -57,21 +65,39 @@ function MarketplacePage() {
         minPrice: minPrice ? Number(minPrice) : undefined,
         maxPrice: maxPrice ? Number(maxPrice) : undefined,
         inStock,
-        sort,
+        sort: sort === "distance" ? "newest" : sort,
         limit: 60,
       }),
   });
 
-  let items = (products.data ?? []).map((p) => ({
-    ...p,
-    distanceKm: location
-      ? haversineKm(location, { lat: p.latitude ?? p.vendors?.latitude, lng: p.longitude ?? p.vendors?.longitude })
-      : null,
-  }));
-  if (distance !== "any" && location) {
-    const max = Number(distance);
-    items = items.filter((p) => p.distanceKm != null && p.distanceKm <= max).sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0));
-  }
+  const nearby = useQuery({
+    queryKey: ["products-nearby", search, point, distance, sort],
+    enabled: nearbyMode,
+    queryFn: () =>
+      fetchNearbyProducts({
+        point: point!,
+        radius: distance === "any" ? 50 : Number(distance),
+        q: search.q,
+        category: search.category,
+        sort: sort === "distance" ? "distance" : sort,
+        limit: 60,
+      }),
+  });
+
+  const loading = nearbyMode ? nearby.isLoading : products.isLoading;
+
+  let items = nearbyMode
+    ? (nearby.data ?? [])
+        .filter((p) => (search.state ? true : true))
+        .filter((p) => (minPrice ? Number(p.discount_price || p.price) >= Number(minPrice) : true))
+        .filter((p) => (maxPrice ? Number(p.discount_price || p.price) <= Number(maxPrice) : true))
+        .filter((p) => (inStock ? p.stock_quantity > 0 : true))
+    : (products.data ?? []).map((p) => ({
+        ...p,
+        distanceKm: point
+          ? haversineKm(point, { lat: p.latitude ?? p.vendors?.latitude, lng: p.longitude ?? p.vendors?.longitude })
+          : null,
+      }));
 
   const setSearch = (patch: Partial<Search>) => navigate({ search: (prev) => ({ ...prev, ...patch }) as never });
 
@@ -117,12 +143,18 @@ function MarketplacePage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="any">Any distance</SelectItem>
+            <SelectItem value="1">Within 1 km</SelectItem>
             <SelectItem value="5">Within 5 km</SelectItem>
             <SelectItem value="10">Within 10 km</SelectItem>
             <SelectItem value="25">Within 25 km</SelectItem>
           </SelectContent>
         </Select>
-        {!location ? <p className="mt-1 text-xs text-muted-foreground">Allow location access to filter by distance.</p> : null}
+        <div className="mt-2">
+          <LocationPicker className="border border-border" />
+        </div>
+        {!location ? (
+          <p className="mt-1 text-xs text-muted-foreground">Set your location to discover vendors and products near you.</p>
+        ) : null}
       </div>
       <div>
         <Label className="text-xs uppercase tracking-wide text-muted-foreground">Price range</Label>
@@ -157,6 +189,7 @@ function MarketplacePage() {
                 <SelectItem value="newest">Newest</SelectItem>
                 <SelectItem value="price_asc">Price: low to high</SelectItem>
                 <SelectItem value="price_desc">Price: high to low</SelectItem>
+                <SelectItem value="distance">Nearest first</SelectItem>
               </SelectContent>
             </Select>
             <Button variant="outline" className="lg:hidden" onClick={() => setShowFilters((v) => !v)}>
@@ -168,12 +201,19 @@ function MarketplacePage() {
         <div className="gap-6 lg:flex">
           <aside className={`${showFilters ? "block" : "hidden"} surface mb-4 p-4 lg:mb-0 lg:block lg:w-64 lg:shrink-0`}>{filters}</aside>
           <div className="min-w-0 flex-1">
-            <ProductGrid
-              loading={products.isLoading}
-              items={items}
-              empty="No products match your filters."
-              onAdd={(p) => addItem.mutate(p)}
-            />
+            {(distance !== "any" || sort === "distance") && !point ? (
+              <EmptyState
+                title="Set your location to discover vendors and products near you."
+                description="Pick your city or use your current location to filter and sort by distance."
+              />
+            ) : (
+              <ProductGrid
+                loading={loading}
+                items={items}
+                empty="No products match your filters."
+                onAdd={(p) => addItem.mutate(p)}
+              />
+            )}
           </div>
         </div>
       </div>
