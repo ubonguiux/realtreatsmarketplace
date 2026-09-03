@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StoredImage } from "./StoredImage";
 import { formatMoney, effectivePrice } from "@/lib/marketplace";
+import { formatDistance } from "@/lib/geo";
 
 export type ProductCardData = {
   id: string;
@@ -55,8 +56,10 @@ export function ProductCard({ product, onAdd }: { product: ProductCardData; onAd
             <span className="inline-flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" />
               {product.city ?? product.vendors?.city}
-              {product.distanceKm != null ? ` · ${product.distanceKm} km` : ""}
             </span>
+          ) : null}
+          {formatDistance(product.distanceKm) ? (
+            <span className="font-medium text-primary">{formatDistance(product.distanceKm)}</span>
           ) : null}
         </div>
         <Button size="sm" className="mt-auto w-full" disabled={!inStock} onClick={onAdd}>

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, BadgeCheck } from "lucide-react";
 import { StoredImage } from "./StoredImage";
+import { formatDistance } from "@/lib/geo";
 
 export type VendorCardData = {
   id: string;
@@ -36,8 +37,10 @@ export function VendorCard({ vendor }: { vendor: VendorCardData }) {
           <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
             <MapPin className="h-3.5 w-3.5" />
             {[vendor.city, vendor.state].filter(Boolean).join(", ") || "Location not set"}
-            {vendor.distanceKm != null ? ` · ${vendor.distanceKm} km` : ""}
           </p>
+          {formatDistance(vendor.distanceKm) ? (
+            <p className="mt-1 text-xs font-medium text-primary">{formatDistance(vendor.distanceKm)}</p>
+          ) : null}
         </div>
       </div>
     </Link>

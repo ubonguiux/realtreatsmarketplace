@@ -7,8 +7,10 @@ import { VendorCard } from "@/components/marketplace/VendorCard";
 import { EmptyState } from "@/components/marketplace/EmptyState";
 import { Button } from "@/components/ui/button";
 import { fetchProducts, fetchVendors } from "@/lib/queries";
-import { useCart, useCategories, useSettings, useUserLocation } from "@/hooks/useMarketplace";
-import { haversineKm } from "@/lib/marketplace";
+import { useCart, useCategories, useSettings } from "@/hooks/useMarketplace";
+import { useLocationContext } from "@/hooks/useLocationContext";
+import { fetchNearbyProducts, fetchNearbyVendorCards } from "@/lib/geo";
+import { LocationPicker } from "@/components/marketplace/LocationPicker";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -58,23 +60,26 @@ function Section({
 function Home() {
   const { data: settings } = useSettings();
   const { data: categories = [] } = useCategories();
-  const { data: location } = useUserLocation();
+  const { location, radius } = useLocationContext();
+  const point = location ? { lat: location.lat, lng: location.lng } : null;
   const { addItem } = useCart();
 
   const featuredProducts = useQuery({ queryKey: ["home", "featured"], queryFn: () => fetchProducts({ featured: true, limit: 8 }) });
   const recent = useQuery({ queryKey: ["home", "recent"], queryFn: () => fetchProducts({ limit: 12 }) });
   const vendors = useQuery({ queryKey: ["home", "vendors"], queryFn: () => fetchVendors({ limit: 8 }) });
 
-  const nearby = (recent.data ?? [])
-    .map((p) => ({
-      ...p,
-      distanceKm: location
-        ? haversineKm(location, { lat: p.latitude ?? p.vendors?.latitude, lng: p.longitude ?? p.vendors?.longitude })
-        : null,
-    }))
-    .filter((p) => p.distanceKm != null)
-    .sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0))
-    .slice(0, 8);
+  const nearbyProducts = useQuery({
+    queryKey: ["home", "nearby-products", point, radius],
+    enabled: Boolean(point),
+    queryFn: () => fetchNearbyProducts({ point: point!, radius, limit: 8, sort: "distance" }),
+  });
+  const nearbyVendors = useQuery({
+    queryKey: ["home", "nearby-vendors", point, radius],
+    enabled: Boolean(point),
+    queryFn: () => fetchNearbyVendorCards({ point: point!, radius, limit: 8 }),
+  });
+  const nearby = nearbyProducts.data ?? [];
+  const nearVendors = nearbyVendors.data ?? [];
 
   const name = settings?.name ?? "RealTreats Marketplace";
 
@@ -159,11 +164,35 @@ function Home() {
         />
       </Section>
 
-      {nearby.length > 0 ? (
-        <Section title="Near you" action={{ to: "/nearby", label: "Explore nearby" }}>
-          <ProductGrid loading={false} items={nearby} empty="" onAdd={(p) => addItem.mutate(p)} />
+      {point ? (
+        <>
+          <Section title={`Products near you (within ${radius} km)`} action={{ to: "/nearby", label: "Explore nearby" }}>
+            <ProductGrid
+              loading={nearbyProducts.isLoading}
+              items={nearby}
+              empty={`No products within ${radius} km yet.`}
+              onAdd={(p) => addItem.mutate(p)}
+            />
+          </Section>
+          {nearVendors.length ? (
+            <Section title={`Vendors near you (within ${radius} km)`} action={{ to: "/nearby", label: "See all" }}>
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                {nearVendors.map((v) => (
+                  <VendorCard key={v.id} vendor={v} />
+                ))}
+              </div>
+            </Section>
+          ) : null}
+        </>
+      ) : (
+        <Section title="Near you">
+          <EmptyState
+            title="Set your location to discover vendors and products near you."
+            description="Use your current location or pick your city — results are ranked nearest first."
+            action={<LocationPicker className="border border-border" />}
+          />
         </Section>
-      ) : null}
+      )}
 
       <Section title="Recently added" action={{ to: "/marketplace", label: "See all" }}>
         <ProductGrid
