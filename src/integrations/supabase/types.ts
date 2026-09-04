@@ -2166,6 +2166,18 @@ export type Database = {
         Returns: undefined
       }
       vendor_product_limit: { Args: { _vendor_id: string }; Returns: number }
+      vendor_serviceability: {
+        Args: { _lat: number; _lng: number; _vendor_ids: string[] }
+        Returns: {
+          accepts_delivery: boolean
+          distance_km: number
+          has_location: boolean
+          radius_km: number
+          serviceable: boolean
+          vendor_id: string
+          vendor_name: string
+        }[]
+      }
     }
     Enums: {
       app_role: "super_admin" | "vendor" | "customer" | "despatcher"

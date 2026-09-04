@@ -8,6 +8,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatMoney } from "@/lib/marketplace";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useMarketplace";
+import { useServiceability } from "@/hooks/useServiceability";
+import { ServiceabilityBadge } from "@/components/marketplace/ServiceabilityBadge";
+import { useLocationContext } from "@/hooks/useLocationContext";
+import { LocationPicker } from "@/components/marketplace/LocationPicker";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -24,6 +28,9 @@ export const Route = createFileRoute("/cart")({
 function CartPage() {
   const { user } = useAuth();
   const { items, subtotal, updateItem, isLoading } = useCart();
+  const { location } = useLocationContext();
+  const vendorIds = items.map((i) => i.vendor_id as string);
+  const { data: serviceability, isFetching: checkingDelivery } = useServiceability(vendorIds, location);
 
   const groups = items.reduce<Record<string, typeof items>>((acc, item) => {
     const key = item.vendor_id as string;
@@ -66,7 +73,14 @@ function CartPage() {
             <div className="space-y-5">
               {Object.entries(groups).map(([vendorId, group]) => (
                 <div key={vendorId} className="surface p-4">
-                  <p className="mb-3 text-sm font-semibold">{group[0]?.vendors?.name ?? "Vendor"}</p>
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-sm font-semibold">{group[0]?.vendors?.name ?? "Vendor"}</p>
+                    <ServiceabilityBadge
+                      status={serviceability?.[vendorId]}
+                      hasLocation={Boolean(location)}
+                      loading={checkingDelivery}
+                    />
+                  </div>
                   <div className="space-y-4">
                     {group.map((item) => (
                       <div key={item.id} className="flex gap-3">
@@ -129,6 +143,22 @@ function CartPage() {
                   <dd className="text-muted-foreground">Calculated at checkout</dd>
                 </div>
               </dl>
+              <div className="mt-4 space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">Delivery location</p>
+                <LocationPicker />
+                {location && serviceability
+                  ? (() => {
+                      const blocked = Array.from(new Set(vendorIds)).filter((id) => !serviceability[id]?.serviceable);
+                      return blocked.length ? (
+                        <p className="text-xs text-destructive">
+                          {blocked.length} vendor{blocked.length > 1 ? "s" : ""} cannot deliver to this location yet.
+                        </p>
+                      ) : (
+                        <p className="text-xs text-primary">All vendors deliver to your location.</p>
+                      );
+                    })()
+                  : null}
+              </div>
               <Button asChild className="mt-4 w-full" size="lg">
                 <Link to="/checkout">Proceed to checkout</Link>
               </Button>
