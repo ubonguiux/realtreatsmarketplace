@@ -43,6 +43,13 @@ export function LocationField({
     [term],
   );
 
+  // When a city is already typed but no pin is set, offer it as a one-tap suggestion.
+  const cityHint = useMemo(() => {
+    if (set || !value.city) return null;
+    const target = value.city.trim().toLowerCase();
+    return CITY_PRESETS.find((c) => c.city.toLowerCase() === target) ?? null;
+  }, [set, value.city]);
+
   const mapSrc = useMemo(() => {
     if (!set) return null;
     const lat = value.latitude as number;
@@ -133,6 +140,23 @@ export function LocationField({
               {c.city}, {c.state}
             </button>
           ))}
+        </div>
+      ) : null}
+
+      {cityHint && !matches.length ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+          <span>Customers can only find you by distance once a pin is set.</span>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              onChange({ latitude: cityHint.lat, longitude: cityHint.lng, city: cityHint.city, state: cityHint.state });
+              setError(null);
+            }}
+          >
+            Use {cityHint.city} centre
+          </Button>
         </div>
       ) : null}
 
