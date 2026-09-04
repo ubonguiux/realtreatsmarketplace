@@ -43,6 +43,13 @@ export function LocationField({
     [term],
   );
 
+  // When a city is already typed but no pin is set, offer it as a one-tap suggestion.
+  const cityHint = useMemo(() => {
+    if (set || !value.city) return null;
+    const target = value.city.trim().toLowerCase();
+    return CITY_PRESETS.find((c) => c.city.toLowerCase() === target) ?? null;
+  }, [set, value.city]);
+
   const mapSrc = useMemo(() => {
     if (!set) return null;
     const lat = value.latitude as number;
