@@ -143,6 +143,23 @@ export function LocationField({
         </div>
       ) : null}
 
+      {cityHint && !matches.length ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+          <span>Customers can only find you by distance once a pin is set.</span>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              onChange({ latitude: cityHint.lat, longitude: cityHint.lng, city: cityHint.city, state: cityHint.state });
+              setError(null);
+            }}
+          >
+            Use {cityHint.city} centre
+          </Button>
+        </div>
+      ) : null}
+
       {error ? <p className="mt-2 text-xs text-destructive">{error}</p> : null}
 
       {set && mapSrc ? (
