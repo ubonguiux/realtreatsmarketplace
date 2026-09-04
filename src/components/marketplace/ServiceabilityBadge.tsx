@@ -18,10 +18,10 @@ export function ServiceabilityBadge({ status, hasLocation, loading }: Props) {
       </span>
     );
   }
-  if (loading || !status) {
+  if (loading && !status) {
     return <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">Checking delivery…</span>;
   }
-  if (!status.has_location) {
+  if (!status || !status.has_location) {
     return (
       <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
         <MapPinOff className="h-3.5 w-3.5" />
