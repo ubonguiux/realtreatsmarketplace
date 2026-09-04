@@ -13,6 +13,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { NIGERIAN_STATES, formatMoney } from "@/lib/marketplace";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart, useUserLocation } from "@/hooks/useMarketplace";
+import { useLocationContext } from "@/hooks/useLocationContext";
+import { useServiceability } from "@/hooks/useServiceability";
+import { ServiceabilityBadge } from "@/components/marketplace/ServiceabilityBadge";
+import { LocationPicker } from "@/components/marketplace/LocationPicker";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -31,6 +35,13 @@ function CheckoutPage() {
   const navigate = useNavigate();
   const { items, subtotal, isLoading } = useCart();
   const { data: location } = useUserLocation();
+  const { location: deliveryLocation } = useLocationContext();
+  const vendorIds = items.map((i) => i.vendor_id as string);
+  const { data: serviceability, isFetching: checkingDelivery } = useServiceability(vendorIds, deliveryLocation);
+  const vendorGroups = Array.from(new Set(vendorIds)).map((id) => ({
+    id,
+    name: items.find((i) => i.vendor_id === id)?.vendors?.name ?? "Vendor",
+  }));
   const [form, setForm] = useState({ address: "", city: "", state: "", phone: "", notes: "" });
 
   useEffect(() => {
@@ -182,6 +193,25 @@ function CheckoutPage() {
               <span>{formatMoney(subtotal)}</span>
             </div>
             <p className="mt-1 text-xs text-muted-foreground">Delivery fees are added per vendor when the order is created.</p>
+
+            <div className="mt-4 border-t border-border pt-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-semibold">Delivery availability</p>
+                <LocationPicker compact />
+              </div>
+              <ul className="mt-2 space-y-2">
+                {vendorGroups.map((v) => (
+                  <li key={v.id} className="space-y-1">
+                    <p className="truncate text-xs text-muted-foreground">{v.name}</p>
+                    <ServiceabilityBadge
+                      status={serviceability?.[v.id]}
+                      hasLocation={Boolean(deliveryLocation)}
+                      loading={checkingDelivery}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
             <Button type="submit" size="lg" className="mt-4 w-full" disabled={placeOrder.isPending}>
               {placeOrder.isPending ? "Placing order…" : "Place order"}
             </Button>
