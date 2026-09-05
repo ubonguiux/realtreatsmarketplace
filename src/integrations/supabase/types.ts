@@ -667,6 +667,10 @@ export type Database = {
           auto_approve_products: boolean
           auto_approve_vendors: boolean
           auto_assign_deliveries: boolean
+          bank_account_name: string
+          bank_account_number: string
+          bank_name: string
+          bank_transfer_enabled: boolean
           commission_percent: number
           contact_address: string | null
           corporate_website_url: string | null
@@ -703,6 +707,10 @@ export type Database = {
           auto_approve_products?: boolean
           auto_approve_vendors?: boolean
           auto_assign_deliveries?: boolean
+          bank_account_name?: string
+          bank_account_number?: string
+          bank_name?: string
+          bank_transfer_enabled?: boolean
           commission_percent?: number
           contact_address?: string | null
           corporate_website_url?: string | null
@@ -739,6 +747,10 @@ export type Database = {
           auto_approve_products?: boolean
           auto_approve_vendors?: boolean
           auto_assign_deliveries?: boolean
+          bank_account_name?: string
+          bank_account_number?: string
+          bank_name?: string
+          bank_transfer_enabled?: boolean
           commission_percent?: number
           contact_address?: string | null
           corporate_website_url?: string | null
@@ -984,6 +996,7 @@ export type Database = {
           created_at: string
           currency: string
           customer_id: string | null
+          declared_at: string | null
           failure_reason: string | null
           gateway: string
           gateway_fee: number
@@ -991,9 +1004,14 @@ export type Database = {
           id: string
           metadata: Json
           order_id: string | null
+          payer_bank: string | null
+          payer_name: string | null
           purpose: string
           reference: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: Database["public"]["Enums"]["payment_status"]
+          transfer_note: string | null
           updated_at: string
           vendor_subscription_id: string | null
           verified_at: string | null
@@ -1004,6 +1022,7 @@ export type Database = {
           created_at?: string
           currency?: string
           customer_id?: string | null
+          declared_at?: string | null
           failure_reason?: string | null
           gateway?: string
           gateway_fee?: number
@@ -1011,9 +1030,14 @@ export type Database = {
           id?: string
           metadata?: Json
           order_id?: string | null
+          payer_bank?: string | null
+          payer_name?: string | null
           purpose?: string
           reference: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
+          transfer_note?: string | null
           updated_at?: string
           vendor_subscription_id?: string | null
           verified_at?: string | null
@@ -1024,6 +1048,7 @@ export type Database = {
           created_at?: string
           currency?: string
           customer_id?: string | null
+          declared_at?: string | null
           failure_reason?: string | null
           gateway?: string
           gateway_fee?: number
@@ -1031,9 +1056,14 @@ export type Database = {
           id?: string
           metadata?: Json
           order_id?: string | null
+          payer_bank?: string | null
+          payer_name?: string | null
           purpose?: string
           reference?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: Database["public"]["Enums"]["payment_status"]
+          transfer_note?: string | null
           updated_at?: string
           vendor_subscription_id?: string | null
           verified_at?: string | null
@@ -1892,6 +1922,10 @@ export type Database = {
     }
     Functions: {
       accept_delivery: { Args: { _delivery_id: string }; Returns: undefined }
+      admin_review_payment: {
+        Args: { _approve: boolean; _payment_id: string; _reason: string }
+        Returns: undefined
+      }
       admin_update_despatcher_status: {
         Args: {
           p_despatcher_id: string
@@ -1932,6 +1966,15 @@ export type Database = {
         Args: { _delivery_id: string }
         Returns: string
       }
+      declare_bank_transfer: {
+        Args: {
+          _note: string
+          _payer_bank: string
+          _payer_name: string
+          _reference: string
+        }
+        Returns: undefined
+      }
       delivery_next_states: {
         Args: { _status: Database["public"]["Enums"]["delivery_status"] }
         Returns: Database["public"]["Enums"]["delivery_status"][]
@@ -1963,6 +2006,7 @@ export type Database = {
           created_at: string
           currency: string
           customer_id: string | null
+          declared_at: string | null
           failure_reason: string | null
           gateway: string
           gateway_fee: number
@@ -1970,9 +2014,14 @@ export type Database = {
           id: string
           metadata: Json
           order_id: string | null
+          payer_bank: string | null
+          payer_name: string | null
           purpose: string
           reference: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: Database["public"]["Enums"]["payment_status"]
+          transfer_note: string | null
           updated_at: string
           vendor_subscription_id: string | null
           verified_at: string | null
@@ -2056,6 +2105,16 @@ export type Database = {
           storefront_image_url: string
         }[]
       }
+      notify_admins: {
+        Args: {
+          _body: string
+          _entity_id: string
+          _entity_type: string
+          _title: string
+          _type: string
+        }
+        Returns: undefined
+      }
       notify_user: {
         Args: {
           _body: string
@@ -2123,6 +2182,7 @@ export type Database = {
           created_at: string
           currency: string
           customer_id: string | null
+          declared_at: string | null
           failure_reason: string | null
           gateway: string
           gateway_fee: number
@@ -2130,9 +2190,14 @@ export type Database = {
           id: string
           metadata: Json
           order_id: string | null
+          payer_bank: string | null
+          payer_name: string | null
           purpose: string
           reference: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: Database["public"]["Enums"]["payment_status"]
+          transfer_note: string | null
           updated_at: string
           vendor_subscription_id: string | null
           verified_at: string | null
