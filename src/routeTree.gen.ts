@@ -25,6 +25,7 @@ import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminDespatchersRouteImport } from './routes/admin.despatchers'
 import { Route as AdminDispatchRouteImport } from './routes/admin.dispatch'
+import { Route as AdminMapRouteImport } from './routes/admin.map'
 import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -121,6 +122,11 @@ const AdminDispatchRoute = AdminDispatchRouteImport.update({
   path: '/dispatch',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMapRoute = AdminMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/vendors': typeof VendorsRoute
   '/admin/despatchers': typeof AdminDespatchersRoute
   '/admin/dispatch': typeof AdminDispatchRoute
+  '/admin/map': typeof AdminMapRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/vendors': typeof VendorsRoute
   '/admin/despatchers': typeof AdminDespatchersRoute
   '/admin/dispatch': typeof AdminDispatchRoute
+  '/admin/map': typeof AdminMapRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/vendors': typeof VendorsRoute
   '/admin/despatchers': typeof AdminDespatchersRoute
   '/admin/dispatch': typeof AdminDispatchRoute
+  '/admin/map': typeof AdminMapRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/products': typeof AdminProductsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -313,6 +322,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/admin/despatchers'
     | '/admin/dispatch'
+    | '/admin/map'
     | '/admin/payments'
     | '/admin/products'
     | '/admin/settings'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/admin/despatchers'
     | '/admin/dispatch'
+    | '/admin/map'
     | '/admin/payments'
     | '/admin/products'
     | '/admin/settings'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/admin/despatchers'
     | '/admin/dispatch'
+    | '/admin/map'
     | '/admin/payments'
     | '/admin/products'
     | '/admin/settings'
@@ -529,6 +541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDispatchRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/map': {
+      id: '/admin/map'
+      path: '/map'
+      fullPath: '/admin/map'
+      preLoaderRoute: typeof AdminMapRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/payments': {
       id: '/admin/payments'
       path: '/payments'
@@ -640,6 +659,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminDespatchersRoute: typeof AdminDespatchersRoute
   AdminDispatchRoute: typeof AdminDispatchRoute
+  AdminMapRoute: typeof AdminMapRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
   AdminProductsRoute: typeof AdminProductsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -650,6 +670,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDespatchersRoute: AdminDespatchersRoute,
   AdminDispatchRoute: AdminDispatchRoute,
+  AdminMapRoute: AdminMapRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
   AdminProductsRoute: AdminProductsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
